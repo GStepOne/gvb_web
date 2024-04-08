@@ -1,0 +1,6 @@
+/* 根部页面的根 全局作用域 arco的变量是挂在body的 */
+body {
+    --bg: #f0eeee;
+    --active: rgb(var(--arcoblue-6))
+
+}
