@@ -1,20 +1,20 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import Index from '../views/Index.vue'
 import {isMemoSame} from "vue";
-
+import type {RouteMeta} from "vue-router";
+import {useStore} from "@/stores";
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
             path: '/',
             name: 'web',
-            component: Index,
+            component: () => import("../views/web/index.vue"),
             children: [
                 {
                     path: "",
                     name: "index",
-                    meta:{
-                        title:"home"
+                    meta: {
+                        title: "home"
                     },
                     component: () => import("../views/web/index.vue")
                 }
@@ -29,8 +29,8 @@ const router = createRouter({
             path: '/admin',
             name: 'admin',
             component: () => import("../views/admin/index.vue"),
-            meta:{
-                title:"首页"
+            meta: {
+                title: "首页"
             },
             children: [
                 {
@@ -41,15 +41,15 @@ const router = createRouter({
                 {
                     path: "user_center",
                     name: "user_center",
-                    meta:{
-                        title:"个人中心"
+                    meta: {
+                        title: "个人中心"
                     },
                     children: [
                         {
                             path: "user_info",
                             name: "user_info",
-                            meta:{
-                                title:"我的信息"
+                            meta: {
+                                title: "我的信息"
                             },
                             component: () => import("../views/admin/user_center/user_info.vue")
                         }
@@ -58,15 +58,16 @@ const router = createRouter({
                 {
                     path: "article",
                     name: "article",
-                    meta:{
-                        title:"文章管理"
+                    meta: {
+                        title: "文章管理",
+                        isAdmin: true,//只有管理员能看
                     },
                     children: [
                         {
                             path: "article_list",
                             name: "article_list",
-                            meta:{
-                                title:"文章列表"
+                            meta: {
+                                title: "文章列表"
                             },
                             component: () => import("../views/admin/article/article_list.vue")
                         }
@@ -75,15 +76,17 @@ const router = createRouter({
                 {
                     path: "users",
                     name: "users",
-                    meta:{
-                        title:"用户管理"
+                    meta: {
+                        title: "用户管理",
+                        isAdmin: true,//只有管理员能看
+                        isTourist:true,
                     },
                     children: [
                         {
                             path: "user_list",
                             name: "user_list",
-                            meta:{
-                                title:"用户列表"
+                            meta: {
+                                title: "用户列表"
                             },
                             component: () => import("../views/admin/users/user_list.vue")
                         }
@@ -92,23 +95,25 @@ const router = createRouter({
                 {
                     path: "system",
                     name: "system",
-                    meta:{
-                        title:"系统管理"
+                    meta: {
+                        title: "系统管理",
+                        isAdmin: true,//只有管理员能看
+                        isTourist: false,
                     },
                     children: [
                         {
                             path: "menu_list",
                             name: "menu_list",
-                            meta:{
-                                title:"菜单列表"
+                            meta: {
+                                title: "菜单列表"
                             },
                             component: () => import("../views/admin/system/menu_list.vue")
                         },
                         {
                             path: "log_list",
                             name: "log_list",
-                            meta:{
-                                title:"系统日志"
+                            meta: {
+                                title: "系统日志"
                             },
                             component: () => import("../views/admin/system/log_list.vue")
                         }
@@ -117,15 +122,17 @@ const router = createRouter({
                 {
                     path: "chat_group",
                     name: "chat_group",
-                    meta:{
-                        title:"群聊管理"
+                    meta: {
+                        title: "群聊管理"
                     },
                     children: [
                         {
                             path: "chat_list",
                             name: "chat_list",
-                            meta:{
-                                title:"聊天记录"
+                            meta: {
+                                title: "聊天记录",
+                                isTourist: true,
+                                isAdmin: true,
                             },
                             component: () => import("../views/admin/chat_group/chat_list.vue")
                         }
@@ -138,3 +145,14 @@ const router = createRouter({
 })
 
 export default router
+
+
+
+router.beforeEach((to, from, next) => {
+    console.log(from.path, to.path)
+    const store = useStore()
+    const meta:RouteMeta = to.meta
+
+    //判断目标地址的meta值
+    next()
+})

@@ -1,4 +1,6 @@
 import {defineStore} from 'pinia'
+import {parseToken} from "@/utils/jwt";
+import {logoutApi} from "@/api/user_api";
 
 export interface userInfoType {
     nick_name: string
@@ -6,17 +8,19 @@ export interface userInfoType {
     user_id: number
     avatar: string
     token: string
+    exp: number //过期时间需要x1000
 }
 
 const collapsed = false
 const theme = true //light false dark
 
 const userInfo: userInfoType = {
-    nick_name: "Jack&Leo",
+    nick_name: "",
     role: 0,
     user_id: 0,
-    avatar: "/image/choppa.jpeg",
-    token: ""
+    avatar: "",
+    token: "",
+    exp: 0,
 }
 export const useStore = defineStore('counter', {
     state() {
@@ -55,11 +59,48 @@ export const useStore = defineStore('counter', {
         },
         setCollapsed(collapsed: boolean) {
             this.collapsed = collapsed
+        },
+        setToken(token: string) {
+            this.userInfo.token = token
+            let info = parseToken(token)
+            Object.assign(this.userInfo, info)
+            localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
+
+        },
+        loadToken() {
+            let val = localStorage.getItem("userInfo")
+            if (val === null) {
+                return
+            }
+            try {
+                this.userInfo = JSON.parse(val)
+            } catch (e) {
+                console.error("解析token失败" + e)
+                return;
+            }
+        },
+        async logout() {
+            await logoutApi()
+            //置空用户
+            this.userInfo = userInfo
         }
     },
     getters: {
         themeString(): string {
             return this.theme ? "light" : "dark"
+        },
+        isLogin(): boolean {
+            //角色不等于0
+            return this.userInfo.role !== 0
+        },
+        isAdmin(): boolean {
+            //角色等于1 2是普通用户 3 是游客
+            return this.userInfo.role === 1
+        },
+        isTourist():boolean{
+            return this.userInfo.role === 3
         }
     }
 })
+
+

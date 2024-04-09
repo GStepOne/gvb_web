@@ -62,6 +62,9 @@ const store = useStore();
 function select(value: any) {
   let val = value as string
   if (val === "logout") {
+    //调用退出接口
+    store.logout()
+    router.push({ name: "index" })
     return
   }
   return router.push({
