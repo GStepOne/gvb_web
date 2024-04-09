@@ -1,6 +1,12 @@
 <template>
   <div class="gvb_menu">
-    <a-menu @menu-item-click="clickMenu">
+    <a-menu
+        @menu-item-click="clickMenu"
+        show-collapse-button
+        :default-open-keys=openKeys
+        :default-selected-keys=selectedKeys
+        @collapse="collapse"
+    >
       <template v-for="item in menuList" :key="item.key">
         <a-menu-item v-if="item.child?.length === 0" :key="item.name">
           {{ item.title }}
@@ -36,10 +42,12 @@ import {
   IconApps,
   IconUser,
 } from '@arco-design/web-vue/es/icon';
-import type {Component} from "vue";
-import {useRouter,useRoute} from "vue-router";
-import type {RouteMeta} from "vue-router";
+import {type Component, watch} from "vue";
+import {useRouter, useRoute} from "vue-router";
+import {ref} from "vue";
+import {useStore} from "@/stores"
 
+const store = useStore()
 const router = useRouter()
 const route = useRoute()
 
@@ -76,13 +84,56 @@ const menuList: MenuType[] = [
   {
     key: "6", title: "系统管理", icon: IconMenu, name: "system", child: [
       {key: "6-1", title: "菜单列表", icon: IconUser, name: "menu_list", child: []},
+      {key: "6-2", title: "系统日志", icon: IconUser, name: "log_list", child: []},
     ]
   }
 ]
+
+//获取路由的名字和
+const selectedKeys = ref([route.name])
+const openKeys = ref([route.matched[1].name])
+
+//监听路由名字的变化
+watch(() => route.name, () => {
+  selectedKeys.value = [route.name]
+  openKeys.value = [route.matched[1].name]
+})
+
 
 function clickMenu(name: string) {
   router.push({
     name: name
   })
 }
+
+function collapse(collapsed: boolean) {
+  //侧边栏收缩状态存pinia
+  store.setCollapsed(collapsed)
+}
 </script>
+
+<style lang="scss">
+.gvb_menu {
+  .arco-menu {
+    position: inherit;
+  }
+
+  .arco-menu-collapse-button {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate((50%, -50%));
+    opacity: 0;
+    transition: all .3s;
+  }
+}
+
+//鼠标放上去显示展开按钮
+aside:hover {
+  .gvb_menu {
+    .arco-menu-collapse-button {
+      opacity: 1;
+    }
+  }
+}
+</style>

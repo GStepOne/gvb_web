@@ -1,23 +1,38 @@
 <template>
   <div class="gvb_tabs">
-    <!--active 代表默认选中 -->
-    <span :class="{gvb_tab:true,active:route.name === item.name}" v-for="item in tabList" :key="item.name"
-          @click="clickTab(item)">{{
-        item.title
-      }}
-      <!--阻止事件冒泡.stop| middle 鼠标中间的键关闭-->
-    <IconClose @click.stop="closeTab(item)" @click.middle="closeTab(item)" v-if="item.name!== 'home'"></IconClose>
-    </span>
-    <span class="gvb_tab close_all_tab" @click="closeAllTab()">全部关闭<IconClose></IconClose></span>
+    <!-- 只有超过这部分才会滑动-->
+    <swiper
+        :slide-per-view="slidePerView"
+        class="mySwiper"
+    >
+        <swiper-slide v-for="(item,index) in tabList" :key="item.name"
+        >
+          <!--active 代表默认选中 -->
+          <span
+              :class="{gvb_tab:true,active:route.name === item.name}" :key="item.name"
+              @click="clickTab(item)"
+          >
+          {{
+              item.title
+            }}
+            <!--阻止事件冒泡.stop| middle 鼠标中间的键关闭-->
+          <IconClose @click.stop="closeTab(item)" v-if="item.name!== 'home'"></IconClose>
+        </span>
+        </swiper-slide>
+      <span class="gvb_tab close_all_tab" @click="closeAllTab()">全部关闭<IconClose></IconClose></span>
+    </swiper>
   </div>
+
 </template>
 
 <script setup lang="ts">
 import {IconClose} from "@arco-design/web-vue/es/icon";
-import {type Ref, watch} from "vue"
-import {ref} from "vue"
+import type {Ref} from "vue"
+import {onMounted, ref, watch, nextTick} from "vue"
 import {useRoute, useRouter} from "vue-router";
-
+import {Swiper, SwiperSlide} from "swiper/vue";
+import {tabType} from "@/types";
+const slidePerView = ref(12);
 //获取路由参数、名字、params参数 从这里拿，router 是路由器 push replace
 const route = useRoute()
 const router = useRouter()
@@ -27,10 +42,30 @@ interface tabType {
   title: string
 }
 
+//算出总宽度
+onMounted(() => {
+  nextTick(() => {
+    // 在下一个 DOM 更新周期中获取宽度,指明为元素不报错了
+    let mySwiperWidth = (document.querySelector(".mySwiper") as Element).clientWidth;
+    let actualWidth = (document.querySelector(".swiper-wrapper") as Element).scrollWidth;
 
-const tableDefault: tabType[] = [
-  {name: "home", title: "首页"},
-]
+    if (actualWidth <= mySwiperWidth) {
+      return;
+    }
+
+    let swiperSlideList = document.querySelectorAll('.swiper-wrapper .swiper-slide');
+    let sum = 0;
+    let count = 0;
+    for (const slide of swiperSlideList) {
+      sum += slide.clientWidth;
+      if (sum > mySwiperWidth) {
+        break;
+      }
+      count++;
+    }
+  });
+})
+
 const tabList: Ref<tabType[]> = ref([
   {name: "home", title: "首页"},
 ])
@@ -90,7 +125,7 @@ function clickTab(item: tabType) {
 }
 
 watch(() => route.name, () => {
-  console.log(route.name)
+  // console.log(route.name)
   if (!inList(route.name as string)) {
     //当前路由添加到里面
     tabList.value.push({
@@ -111,6 +146,7 @@ function inList(name: string): boolean {
 
   return false
 }
+
 // 调用一下
 loadTabs()
 </script>
@@ -124,6 +160,27 @@ loadTabs()
   display: flex;
   align-items: center;
   position: relative;
+  background-color: var(--color-bg-1);
+
+
+  .mySwiper {
+    width: calc(100% - 94px);
+    overflow: hidden;
+    white-space: nowrap; //不加会乱
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    .swiper-wrapper {
+      display: flex;
+      justify-content: start;
+      width: 100%;
+
+      .swiper-slide {
+        width: auto !important; //当一个样式规则使用了 !important 时，它将会覆盖其他同样规则但没有使用 !important 的样式。
+      }
+    }
+  }
 
   .gvb_tab {
     border-radius: 5px;
@@ -131,7 +188,7 @@ loadTabs()
     padding: 2px 8px;
     margin-right: 10px;
     cursor: pointer;
-
+    background-color: var(--color-bg-1);
 
     &.active {
       background-color: var(--active);
@@ -155,7 +212,7 @@ loadTabs()
 
   .close_all_tab {
     position: absolute;
-    right: 20px;
+    right: 50px;
     margin-right: 0;
   }
 }
