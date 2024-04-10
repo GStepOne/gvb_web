@@ -9,6 +9,9 @@ import 'vue-router'
 declare module 'vue-router' {
     interface RouteMeta {
         isLogin?: boolean
+        isAdmin?: boolean
+        isTourist?: boolean
+        title?: string
     }
 }
 

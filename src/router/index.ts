@@ -2,6 +2,8 @@ import {createRouter, createWebHistory} from 'vue-router'
 import {isMemoSame} from "vue";
 import type {RouteMeta} from "vue-router";
 import {useStore} from "@/stores";
+import {Message} from "@arco-design/web-vue"
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -79,7 +81,7 @@ const router = createRouter({
                     meta: {
                         title: "用户管理",
                         isAdmin: true,//只有管理员能看
-                        isTourist:true,
+                        isTourist: true,
                     },
                     children: [
                         {
@@ -147,12 +149,28 @@ const router = createRouter({
 export default router
 
 
-
 router.beforeEach((to, from, next) => {
     console.log(from.path, to.path)
     const store = useStore()
-    const meta:RouteMeta = to.meta
+    const meta: RouteMeta = to.meta
 
+    if (meta.isLogin && !store.isLogin) {
+        Message.warning("需要登录")
+        router.push({name: from.name as string})
+        return
+    }
+    //如果是普通用户
+    if (store.isCommon && (meta.isAdmin || meta.isTourist)) {
+        Message.warning("普通用户权限不足")
+        router.push({name: from.name as string})
+        return
+    }
+    //当前是游客，不是游客的就不能看
+    if (store.isTourist && meta.isTourist === false) {
+        Message.warning("游客权限不足")
+        router.push({name: from.name as string})
+        return
+    }
     //判断目标地址的meta值
     next()
 })

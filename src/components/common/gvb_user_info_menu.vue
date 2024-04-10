@@ -2,7 +2,7 @@
   <div class="gvb_user_info_menu">
     <a-dropdown @select="select" class="gvb_dropdown">
       <div class="gvb_user_info_menu_drop">
-        <img :src="store.userInfo.avatar" alt="">
+        <img v-if="store.userInfo.avatar" :src="store.userInfo.avatar" alt="">
         <span class="gvb_user_info_menu_span">{{ store.userInfo.nick_name }}</span>
         <IconDown></IconDown>
       </div>

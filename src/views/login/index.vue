@@ -1,7 +1,7 @@
 <template>
   <div class="gvb_login">
     <div class="gvb_login_mask">
-      <Gvb_login_form @ok="ok"></Gvb_login_form>
+      <Gvb_login_form @ok="ok" :qq-redirect-path="back"></Gvb_login_form>
     </div>
   </div>
 </template>
@@ -30,9 +30,57 @@
 import "@/assets/font.css"
 import Gvb_login_form from "@/components/common/gvb_login_form.vue";
 import router from "@/router"
+import {useRoute} from "vue-router"
+import {Message} from "@arco-design/web-vue";
+import {qqLogin} from "@/api/user_api";
+import {useStore} from "@/stores";
+
+const store = useStore()
+const route = useRoute()
+
+interface routerQuery {
+  flag?: string
+  code?: string
+}
+
+interface historyState {
+  back: string
+}
+
+const back = (window.history.state as historyState).back
+
+//qq登录
+async function init(query: routerQuery) {
+  if (query.code === undefined || query.flag !== 'qq') {
+    Message.warning("非法的登录方式")
+    return
+  }
+
+  let res = await qqLogin(query.code)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+
+  Message.success(res.msg)
+  store.setToken(res.data)
+
+  //重定向到上次登录的页面
+  // window.history.state.back
+  let redirectUrl = localStorage.getItem("redirectPath")
+  if (redirectUrl === null) {
+    redirectUrl = "/"
+  }
+  router.push(redirectUrl)
+
+}
+
+//立马调这个方法
+init(route.query)
 
 function ok() {
   let back = window.history.state.back
+  console.log("这个是ok的值",back)
   if (back === null) {
     router.push({name: "index"})
     return

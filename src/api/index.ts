@@ -5,15 +5,33 @@ import {Message} from "@arco-design/web-vue"
 
 export const useAxios = axios.create({
 
-      // baseURL:"http://127.0.0.1:8081", //只是这样会有cors问题
+    // baseURL:"http://127.0.0.1:8081", //只是这样会有cors问题
     //这个跟vite那个只能留一个
-      baseURL:"",
+    baseURL: "",
 })
 
 export interface baseResponse<T> {
     code: number
     data: T
     msg: string
+}
+
+
+export interface listResponse<T> {
+    code: number
+    data: {
+        count: number
+        list: T[]
+    }
+    msg: string
+}
+
+
+export interface paramsType {
+    page: number
+    limit: number
+    key?: string
+    sort?: string
 }
 
 //基础查询
