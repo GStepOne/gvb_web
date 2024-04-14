@@ -3,7 +3,7 @@ import {useStore} from "@/stores";
 import {Message} from "@arco-design/web-vue"
 //创建实例
 
-export const useAxios = axios.create({
+export const useAxios: AxiosInstance = axios.create({
 
     // baseURL:"http://127.0.0.1:8081", //只是这样会有cors问题
     //这个跟vite那个只能留一个
@@ -17,21 +17,33 @@ export interface baseResponse<T> {
 }
 
 
-export interface listResponse<T> {
-    code: number
-    data: {
-        count: number
-        list: T[]
-    }
-    msg: string
+// export interface listResponse<T> {
+//     code: number
+//     data: {
+//         count: number
+//         list: []
+//     }
+//     msg: string
+// }
+
+
+export interface listDataType<T> {
+    count: number
+    list: T[]
 }
 
 
 export interface paramsType {
-    page: number
-    limit: number
+    page?: number
+    limit?: number
     key?: string
     sort?: string
+}
+
+
+export interface optionType {
+    label: string
+    value?: string | number
 }
 
 //基础查询
@@ -59,3 +71,17 @@ useAxios.interceptors.response.use((response) => {
     Message.error(err.msg)
     return Promise.reject(err)
 })
+
+
+export function defaultDeleteApi<T extends number | string>(url: string, idList: T[]): Promise<baseResponse<string>> {
+    return useAxios.delete(url, {
+        data: {
+            id_list: idList
+        }
+    })
+}
+
+//默认的option获取方法
+export function defaultOptionApi(url: string, params?: paramsType): Promise<baseResponse<optionType[]>> {
+    return useAxios.get(url, {params})
+}

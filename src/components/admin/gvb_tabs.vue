@@ -12,7 +12,7 @@
               :class="{gvb_tab:true,active:route.name === item.name}" :key="item.name"
               @click="clickTab(item)"
           >
-          {{
+            {{
               item.title
             }}
             <!--阻止事件冒泡.stop| middle 鼠标中间的键关闭-->
@@ -31,7 +31,7 @@ import type {Ref} from "vue"
 import {onMounted, ref, watch, nextTick} from "vue"
 import {useRoute, useRouter} from "vue-router";
 import {Swiper, SwiperSlide} from "swiper/vue";
-import {tabType} from "@/types";
+import {type tabType} from "@/types";
 const slidePerView = ref(12);
 //获取路由参数、名字、params参数 从这里拿，router 是路由器 push replace
 const route = useRoute()
@@ -121,6 +121,7 @@ function closeTab(item: tabType) {
 }
 
 function clickTab(item: tabType) {
+  console.log("clickTab",item.name)
   router.push({name: item.name})
 }
 
