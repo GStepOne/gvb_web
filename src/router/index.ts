@@ -112,6 +112,14 @@ const router = createRouter({
                             component: () => import("../views/admin/system/menu_list.vue")
                         },
                         {
+                            path: "promotion_list",
+                            name: "promotion_list",
+                            meta: {
+                                title: "广告列表"
+                            },
+                            component: () => import("../views/admin/system/promotion_list.vue")
+                        },
+                        {
                             path: "log_list",
                             name: "log_list",
                             meta: {

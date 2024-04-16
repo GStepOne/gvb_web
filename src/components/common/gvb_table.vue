@@ -99,7 +99,7 @@
           </a-table>
 
         </div>
-        <div class="gvb_table_page">
+        <div class="gvb_table_page" v-if="!noPage">
           <a-pagination
               :total="data.count"
               @change="pageChange()"
@@ -129,7 +129,7 @@ interface Props {
   //一个函数
   url: (params: paramsType) => Promise<baseResponse<listDataType<any>>>;
   columns: TableColumnData[];
-  limit: number,
+  limit?: number,
   rowKey?: string,
   addLabel?: string,
   defaultDelete?: boolean //是否启用默认删除
@@ -144,6 +144,7 @@ interface Props {
   noDelete?: boolean
   searchPlaceholder?: string //搜索模糊匹配的提示词
   defaultParams?: paramsType & any //默认第一次查询的参数
+  noPage?:boolean //不要分页
 }
 
 const props = defineProps<Props>()

@@ -36,6 +36,7 @@ export interface userInfoType {
     token: string
     ip: string
     role: string
+    role_id: number
     sign_status: string
     integral: number
     sign: string //slogan

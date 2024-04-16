@@ -11,19 +11,19 @@ const props = defineProps({
 })
 
 const form = reactive<userCreateRequest & { confirm_password: string }>({
-  nickname: "",
+  nick_name: "",
   password: "",
   role: 2,
-  username: "",
+  user_name: "",
   confirm_password: ""
 })
 
 const formRef = ref()
 const defaultForm = {
-  nickname: "",
+  nick_name: "",
   password: "",
   role: 0,
-  username: "",
+  user_name: "",
   confirm_password: ""
 }
 
@@ -65,6 +65,7 @@ const emits = defineEmits(["update:visible", "ok"])
 <template>
   <div>
     <!--    on-before-ok 不是vue的官方事件-->
+
     <a-modal title="创建用户" :visible="props.visible" :on-before-ok="createUser">
       <a-form ref="formRef" :model="form">
         <!--用户名-->

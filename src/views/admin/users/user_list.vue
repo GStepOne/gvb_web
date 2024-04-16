@@ -82,7 +82,7 @@ const updateUserForm = reactive<userUpdateRequest>({
 //点击编辑按钮弹出框，并给他赋值
 function edit(record: RecordType<userInfoType>): void {
   updateUserForm.user_id = record.id
-  updateUserForm.role = record.role //点开弹框的时候
+  updateUserForm.role = record.role_id //点开弹框的时候
   updateUserForm.nick_name = record.nick_name
   updateVisible.value = true
 
