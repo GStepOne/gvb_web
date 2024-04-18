@@ -1,8 +1,8 @@
 <template>
   <div>
-<!--    ok是自定义的事件名-->
+    <!--    ok是自定义的事件名-->
     <user_create v-model:visible="visible" @ok="createOk"></user_create>
-     编辑用户
+    编辑用户
     <a-modal title="编辑用户" v-model:visible="updateVisible" :on-before-ok="updateUserOk">
       <a-form ref="formUpdateRef" :model="updateUserForm">
         <a-form-item field="nick_name" label="昵称"
@@ -93,8 +93,8 @@ function edit(record: RecordType<userInfoType>): void {
 const visible = ref(false)
 const gvbTable = ref()
 
-function remove(idList: number[]) {
-  console.log(idList)
+function remove(idList: (number | string)[]) {
+  // console.log(idList)
 }
 
 function createOk() {
@@ -115,6 +115,7 @@ const filterGroup: filterOptionType[] = [
 ]
 
 const formUpdateRef = ref()
+
 async function updateUserOk() {
   let val = await formUpdateRef.value.validate()
   if (val) {

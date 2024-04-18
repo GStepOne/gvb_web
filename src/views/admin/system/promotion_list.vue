@@ -24,7 +24,6 @@
 
 
       <template #updated_at="{record}:{record:promotionType}">
-<!--        <a-link :href="record.href" target="_blank">{{ record.href }}</a-link>-->
         <span>{{ dateTimeFormat(record.updated_at) }}</span>
       </template>
 
@@ -46,7 +45,7 @@ import {
   promotionListApi,
   type promotionType
 } from "@/api/promotion_api";
-import Promotion_create from "@/components/admin/promotion_create.vue";
+
 import {dateTimeFormat} from "@/utils/date";
 
 const columns = [
@@ -63,6 +62,7 @@ const visible = ref(false)
 
 const recordData = reactive<promotionCreateType>(
     {
+      id: undefined,
       href: "",
       images: "",
       is_show: false,
@@ -72,7 +72,6 @@ const recordData = reactive<promotionCreateType>(
 
 function edit(record: promotionType) {
   Object.assign(recordData, record)
-  recordData.id = 0
   visible.value = true
 }
 
@@ -83,6 +82,7 @@ function handleOk() {
 
 function add() {
   Object.assign(recordData, defaultPromotionForm)
+  recordData.id = undefined
   visible.value = true
 }
 

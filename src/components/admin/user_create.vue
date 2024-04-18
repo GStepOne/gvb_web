@@ -30,7 +30,7 @@ const defaultForm = {
 const gvbTable = ref()
 
 //验证输入的密码
-async function confirmPasswordValidator(value: string | undefined, callback: (error?: string) => void): void {
+async function confirmPasswordValidator(value: string | undefined, callback: (error?: string) => void): Promise<void> {
   if (value !== form.password) {
     return callback("确认密码不一致")
   }

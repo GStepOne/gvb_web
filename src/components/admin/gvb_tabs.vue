@@ -31,7 +31,7 @@ import type {Ref} from "vue"
 import {onMounted, ref, watch, nextTick} from "vue"
 import {useRoute, useRouter} from "vue-router";
 import {Swiper, SwiperSlide} from "swiper/vue";
-import {type tabType} from "@/types";
+// import type {tabType} from "@/types";
 const slidePerView = ref(12);
 //获取路由参数、名字、params参数 从这里拿，router 是路由器 push replace
 const route = useRoute()

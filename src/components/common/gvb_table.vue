@@ -144,7 +144,7 @@ interface Props {
   noDelete?: boolean
   searchPlaceholder?: string //搜索模糊匹配的提示词
   defaultParams?: paramsType & any //默认第一次查询的参数
-  noPage?:boolean //不要分页
+  noPage?: boolean //不要分页
 }
 
 const props = defineProps<Props>()
@@ -242,6 +242,7 @@ function initActionGroup() {
 
 //增加options
 initActionGroup()
+
 function actionMethod() {
   if (actionValue.value === 0) {
     //批量删除
@@ -388,9 +389,8 @@ function filterChange(item: any, val: any) {
     }
 
     .action_flush {
-      position: absolute;
-      right: 20px;
-      margin-right: 0;
+      margin-left: auto; /* 将按钮推到右侧 */
+      padding: 0 10px;
 
       button {
         padding: 0 10px;
@@ -399,9 +399,13 @@ function filterChange(item: any, val: any) {
     }
   }
 
+  .arco-spin {
+    display: block;
+  }
+
   .gvb_table_data {
     padding: 10px 20px 20px 20px;
-    width: 100%;
+    width: inherit;
 
     .gvb_table_page {
       display: flex;
@@ -411,6 +415,7 @@ function filterChange(item: any, val: any) {
 
     .gvb_table_source {
       .gvd_cell_action {
+        display: flex;
         > button {
           margin-right: 10px;
 

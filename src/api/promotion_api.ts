@@ -23,6 +23,7 @@ export function promotionListApi(params: paramsType): Promise<baseResponse<listD
 
 
 export interface promotionCreateType {
+    id?: number|undefined
     href: string
     images: string
     is_show: boolean
@@ -34,7 +35,8 @@ export const defaultPromotionForm = {
     images: "",
     is_show: false,
     title: "",
-    updated_at: ""
+    updated_at: "",
+    id: 0
 }
 
 //广告创建

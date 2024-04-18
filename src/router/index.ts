@@ -126,7 +126,15 @@ const router = createRouter({
                                 title: "系统日志"
                             },
                             component: () => import("../views/admin/system/log_list.vue")
-                        }
+                        },
+                        {
+                            path: "system",
+                            name: "system_system",
+                            meta: {
+                                title: "系统配置"
+                            },
+                            component: () => import("../views/admin/system/log_list.vue")
+                        },
                     ]
                 },
                 {

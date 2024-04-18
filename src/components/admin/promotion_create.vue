@@ -10,6 +10,8 @@ import {
   defaultPromotionForm
 } from "@/api/promotion_api";
 
+import gvb_upload_image from "../common/gvb_upload_image.vue";
+
 const emits = defineEmits(["update:visible", "ok"])
 const form = reactive<promotionCreateType>({
   href: "",
@@ -24,11 +26,12 @@ const formRef = ref()
 
 interface Props {
   visible: boolean,
-  record: promotionType
+  record: promotionCreateType
 }
 
 const props = defineProps<Props>()
 
+//点击确定的时候，请求后端
 async function okHandler() {
   //参数验证
   let val = await formRef.value.validate()
@@ -92,12 +95,12 @@ function beforeOpen() {
         >
           <a-input v-model="form.href" placeholder="广告跳转链接"></a-input>
         </a-form-item>
-        <!--图片链接-->
+        <!--图片链接 field 属性用于指定表单项的字段名 当表单被提交时，表单项的值将根据 field 属性的值被映射到表单数据对象中相应的字段-->
         <a-form-item field="images" label="图片链接"
                      :rules="[{required:true,message:'请输入图片链接'}]"
                      :validate-trigger="['blur']"
         >
-          <a-input v-model="form.images" placeholder="图片链接"></a-input>
+          <gvb_upload_image v-model="form.images"></gvb_upload_image>
         </a-form-item>
         <!--是否显示-->
         <a-form-item field="is_show" label="是否显示"
