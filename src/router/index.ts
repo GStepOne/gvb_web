@@ -1,5 +1,4 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import {isMemoSame} from "vue";
 import type {RouteMeta} from "vue-router";
 import {useStore} from "@/stores";
 import {Message} from "@arco-design/web-vue"
@@ -129,11 +128,54 @@ const router = createRouter({
                         },
                         {
                             path: "system",
-                            name: "system_system",
+                            name: "system_settings",
                             meta: {
                                 title: "系统配置"
                             },
-                            component: () => import("../views/admin/system/log_list.vue")
+                            redirect: "/admin/system/system/site",
+                            component: () => import("../views/admin/system/system_settings.vue"),
+                            children: [
+                                {
+                                    path: "site",
+                                    name: "site_config",
+                                    meta: {
+                                        title: "网站设置"
+                                    },
+                                    component: () => import("../views/admin/system/config/site_config.vue"),
+                                },
+                                {
+                                    path: "email",
+                                    name: "email_config",
+                                    meta: {
+                                        title: "邮箱设置"
+                                    },
+                                    component: () => import("../views/admin/system/config/email_config.vue"),
+                                },
+                                {
+                                    path: "qiniu",
+                                    name: "qiniu_config",
+                                    meta: {
+                                        title: "七牛云设置"
+                                    },
+                                    component: () => import("../views/admin/system/config/qiniu_config.vue"),
+                                },
+                                {
+                                    path: "qq",
+                                    name: "qq_config",
+                                    meta: {
+                                        title: "QQ设置"
+                                    },
+                                    component: () => import("../views/admin/system/config/qq_config.vue"),
+                                },
+                                {
+                                    path: "jwt",
+                                    name: "jwt_config",
+                                    meta: {
+                                        title: "JWT设置"
+                                    },
+                                    component: () => import("../views/admin/system/config/jwt_config.vue"),
+                                },
+                            ]
                         },
                     ]
                 },
@@ -166,7 +208,6 @@ export default router
 
 
 router.beforeEach((to, from, next) => {
-    console.log(from.path, to.path)
     const store = useStore()
     const meta: RouteMeta = to.meta
 

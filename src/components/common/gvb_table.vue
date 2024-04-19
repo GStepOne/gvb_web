@@ -171,6 +171,10 @@ async function getList(p?: paramsType & any) {
   }
   isLoading.value = true
   let res = await props.url(params)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
   isLoading.value = false
 
   data.list = res.data.list
@@ -305,7 +309,6 @@ const filterGroup = ref<filterOptionType[]>([])
 
 async function initFilterGroup() {
   if (!props.filterGroup) {
-    console.log("filterGroup is empty")
     return
   }
   for (let i = 0; i < props.filterGroup.length; i++) {
@@ -352,6 +355,12 @@ export interface filterOptionType {
 
 function filterChange(item: any, val: any) {
   getList({[item.column]: val})
+}
+
+
+function clearData() {
+  data.list = []
+  data.count = 0
 }
 
 //添加
@@ -416,6 +425,7 @@ function filterChange(item: any, val: any) {
     .gvb_table_source {
       .gvd_cell_action {
         display: flex;
+
         > button {
           margin-right: 10px;
 

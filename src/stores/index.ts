@@ -37,7 +37,6 @@ export const useStore = defineStore('counter', {
     },
     actions: {
         setTheme(localTheme?: boolean) {
-            console.log("当前的", localTheme)
             if (localTheme !== undefined) {
                 this.theme = localTheme
             } else {
