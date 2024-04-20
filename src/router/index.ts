@@ -71,6 +71,13 @@ const router = createRouter({
                                 title: "文章列表"
                             },
                             component: () => import("../views/admin/article/article_list.vue")
+                        }, {
+                            path: "image_list",
+                            name: "image_list",
+                            meta: {
+                                title: "图片列表"
+                            },
+                            component: () => import("../views/admin/article/image_list.vue")
                         }
                     ]
                 },
@@ -90,6 +97,14 @@ const router = createRouter({
                                 title: "用户列表"
                             },
                             component: () => import("../views/admin/users/user_list.vue")
+                        },
+                        {
+                            path: "message_list",
+                            name: "message_list",
+                            meta: {
+                                title: "消息列表"
+                            },
+                            component: () => import("../views/admin/users/message_list.vue")
                         }
                     ]
                 },

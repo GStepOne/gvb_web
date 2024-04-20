@@ -2,7 +2,7 @@
 import {reactive, ref} from "vue";
 import {type menuCreateRequest, type ImageIdSortList, type bannerType, menuUpdateApi} from "@/api/menu_api";
 import {menuCreateApi} from "@/api/menu_api";
-import {imageListApi} from "@/api/image_api";
+import {imageIDListApi, imageListApi} from "@/api/image_api";
 import type {imageIdType} from "@/api/image_api";
 import {Message} from "@arco-design/web-vue";
 import type {baseResponse, listDataType} from "@/api";
@@ -27,7 +27,7 @@ const imageIdList = ref<any>([])
 
 //获取图片列表
 async function getImageList() {
-  let res = await imageListApi()
+  let res = await imageIDListApi()
   imageIdList.value = res.data.list
 }
 
