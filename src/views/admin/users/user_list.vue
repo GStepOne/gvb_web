@@ -33,9 +33,11 @@
     >
       <!--               :action-group="actionGroup"-->
       <template #avatar="{record}">
-        <a-avatar :imageUrl="record.avatar"></a-avatar>
+        <a-avatar @click="checkMessage(record)" :imageUrl="record.avatar"></a-avatar>
       </template>
     </gvb_table>
+
+    <gvb_message_record_modal v-model:visible="messageVisible" :userId="userId"></gvb_message_record_modal>
   </div>
 </template>
 
@@ -51,6 +53,7 @@ import gvb_table, {
   type filterOptionType,
   type RecordType
 } from "@/components/common/gvb_table.vue";
+import Gvb_message_record_modal from "@/components/common/gvb_message_record_modal.vue";
 
 const columns = [
   {title: '昵称', dataIndex: 'nick_name'},
@@ -69,6 +72,14 @@ const columns = [
 //     return true
 //   }
 // }]
+
+const messageVisible = ref(false)
+const userId = ref(0)
+
+function checkMessage(record: userInfoType) {
+  messageVisible.value = true
+  userId.value = record.id
+}
 
 //编辑用户
 const updateVisible = ref(false)

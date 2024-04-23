@@ -65,7 +65,6 @@ const emits = defineEmits(["update:visible", "ok"])
 <template>
   <div>
     <!--    on-before-ok 不是vue的官方事件-->
-
     <a-modal title="创建用户" :visible="props.visible" :on-before-ok="createUser">
       <a-form ref="formRef" :model="form">
         <!--用户名-->
@@ -101,7 +100,6 @@ const emits = defineEmits(["update:visible", "ok"])
         <a-form-item field="role" label="权限">
           <a-select v-model="form.role" :options="roleOptions" placeholder="请选择角色"></a-select>
         </a-form-item>
-
       </a-form>
     </a-modal>
   </div>

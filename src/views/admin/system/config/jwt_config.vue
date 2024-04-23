@@ -10,7 +10,7 @@ import type {baseResponse} from "@/api";
 
 const form = reactive({
   secret: "",
-  expires: "",
+  expires: 0,
   issuer: "",
 })
 

@@ -1,0 +1,140 @@
+<script setup lang="ts">
+// 引入md的编辑器
+import {reactive, ref, watch} from "vue";
+import {MdEditor} from "md-editor-v3";
+import 'md-editor-v3/lib/style.css'
+import {Message} from "@arco-design/web-vue";
+import {uploadImageApi} from "@/api/image_api"
+import type {baseResponse} from "@/api";
+
+const text = ref("# 写篇文章吧，Sama")
+import {useStore} from "@/stores";
+import Gvb_article_upadte from "@/components/common/gvb_article_update.vue";
+import {
+  articleCreateApi,
+  articleDetailApi,
+  type articleType,
+  articleUpdateApi,
+  type articleUpdateType
+} from "@/api/article_api";
+import {dateTimeFormat} from "@/utils/date";
+
+const store = useStore();
+
+interface Props {
+  visible: boolean
+  id?: string
+}
+
+const updateVisible = ref(false)
+const props = defineProps<Props>()
+const emits = defineEmits(["update:visible", "ok"])
+
+async function onUploadImg(files: Array<File>, callback: (urls: Array<string>) => void): Promise<void> {
+  let resList: baseResponse<string>[] = []
+  try {
+    resList = await Promise.all(files.map(file => uploadImageApi(file)))
+  } catch (e) {
+    console.error("文章内的图片上传失败", e)
+    return
+  }
+
+  const urlList: string[] = []
+
+  resList.forEach(res => {
+    if (res.code) {
+      Message.error(res.msg)
+      return
+    }
+
+    urlList.push(res.data)
+  })
+
+  callback(urlList)
+}
+
+const data = reactive<articleUpdateType>({
+  content: "",
+  id:""
+})
+
+//ok 事件
+function okHandler(record: articleUpdateType) {
+  Object.assign(data, record) //从新赋值给data
+}
+
+function publish() {
+
+}
+
+async function updateArticle() {
+  if (data.content === "") {
+    Message.warning("文章内容不能为空")
+    return
+  }
+
+  let res = await articleUpdateApi(data)
+  if (res.code) {
+    Message.error(res.msg)
+    return;
+  }
+  Message.success(res.msg)
+
+  emits("update:visible", false)
+  data.content = ""
+  emits("ok")
+}
+
+async function getData() {
+  let res = await articleDetailApi(props.id);
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  data.content = res.data.content
+  data.id = res.data.id
+}
+
+
+watch(() => props.id, () => {
+  if (props.id) {
+    getData()
+  }
+}, {immediate: true})
+
+
+</script>
+
+<template>
+  <div class="gvb_article_drawer">
+    <gvb_article_upadte v-model:visible="updateVisible"
+                        :data="data"
+                        title="文章信息"
+                        type="add"
+                        @ok="okHandler"
+    ></gvb_article_upadte>
+
+    <a-drawer class="gvb_article_drawer_inner" width="85%" :visible="props.visible"
+              @ok="publish"
+              @cancel="emits('update:visible',false)" unmountOnClose
+              title="编辑文章内容">
+      <div>
+        <MdEditor v-model="data.content" :on-upload-img="onUploadImg" :theme="store.themeString"/>
+      </div>
+
+      <template #footer>
+        <a-button @click="emits('update:visible',false)">取消</a-button>
+        <a-button type="primary" status="success" @click="updateVisible=true">修改</a-button>
+        <a-button type="primary" @click="updateArticle">发布</a-button>
+      </template>
+    </a-drawer>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.gvb_article_drawer_inner {
+  .md-editor {
+    height: calc(100vh - 137px);
+  }
+}
+</style>

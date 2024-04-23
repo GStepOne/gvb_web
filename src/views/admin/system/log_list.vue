@@ -15,7 +15,7 @@
         no-confirm
     >
       <!--搜索的框-->
-      <template #action_other_search="{record}:{record:logType}">
+      <template #action_other_search="{record}:{record: logType}">
         <div class="search_addr">
           <a-input placeholder="地址搜索" v-model="params.addr" style="width: 110px" @change="getList"
                    @keydown.enter="getList"></a-input>
@@ -43,7 +43,7 @@
         </div>
       </template>
       <!--用户名-->
-      <template #user_name="{record}:{record:logType}">
+      <template #user_name="{ record }: { record: logType }">
         <a-dropdown trigger="contextMenu" alignPoint :style="{display:'block'}"
                     @select="selectDrop($event,'user_name')">
           <div style="cursor: pointer">{{ record.user_name }}</div>
@@ -53,7 +53,7 @@
         </a-dropdown>
       </template>
 
-      <template #date="{record}:{record:logType}">
+      <template #date="{ record }: { record: logType }">
         <a-dropdown trigger="contextMenu" alignPoint :style="{display:'block'}"
                     @select="selectDrop($event,'date')">
           <div style="cursor: pointer">{{ dateTimeFormat(record.created_at) }}</div>
@@ -63,7 +63,8 @@
         </a-dropdown>
       </template>
 
-      <template #title="{record}:{record:logType}">
+      <!--标题-->
+      <template #title="{ record }: { record: logType }">
         <div class="log_column_title">
           <span @click="readLog(record)" :class="{isRead: record.read_status}">
             {{ record.title }}
@@ -76,27 +77,18 @@
 
 <script setup lang="ts">
 import gvb_table from "@/components/common/gvb_table.vue";
-import promotion_create from "@/components/admin/promotion_create.vue";
 import {reactive, ref, h, nextTick} from "vue"
 import {logListApi, logReadApi} from "@/api/log_api";
 import {dateTimeFormat} from "@/utils/date";
-import {Message, Tag} from "@arco-design/web-vue";
+import {Tag} from "@arco-design/web-vue";
 import type {logType, logRequest} from "@/api/log_api";
 
 import VueJsonPretty from "vue-json-pretty"
 import 'vue-json-pretty/lib/styles.css'
+import {createApp} from "vue";
 
 const gvbTable = ref()
 const visible = ref(false)
-const recordData = reactive<promotionCreateType>(
-    {
-      id: undefined,
-      href: "",
-      images: "",
-      is_show: false,
-      title: "",
-    }
-)
 
 async function readLog(record: logType) {
   if (!record.read_status) {
@@ -105,7 +97,6 @@ async function readLog(record: logType) {
   }
   visible.value = true
   logContent.value = record.content
-
   //组建渲染完之后，不能一加载就立即触发
   nextTick(() => {
     jsonPreview()
@@ -115,7 +106,7 @@ async function readLog(record: logType) {
 
 //重新调用列表
 function getList() {
-  if (params.status === "") {
+  if (params.status === 0) {
     params.status = undefined
   }
   gvbTable.value.getList(params)
@@ -250,12 +241,18 @@ function jsonPreview() {
 
 import {dateFormat} from "@/utils/date";
 
-function selectDrop(value: string | number | boolean | undefined, column: "user_name" | "addr" | "date") {
+// function selectDrop(value: string | number | boolean | undefined, column: "user_name" | "addr" | "date") {
+function selectDrop(value: string | number | Record<string, any> | undefined, column: "user_name" | "addr" | "date") {
   if (column === "date") {
-    value = dateFormat(value)
+    value = dateFormat(value as string)
   }
-  params[column] = value
-  getList()
+
+  if (typeof value === 'string' || typeof value === 'undefined') {
+    params[column] = value as string | undefined;
+  } else {
+    // 在这里处理 value 是 number 或 Record<string, any> 类型的情况
+  }
+  getList();
 }
 
 </script>

@@ -10,15 +10,15 @@ export interface messageType {
 
 
 export interface messageRecordType {
-    content: string
-    created_at: string
-    message_count: number
-    rev_user_avatar: string
-    rev_user_id: number
-    rev_user_nick_name: string
-    send_user_avatar: string
-    send_user_id: number
-    send_user_nickname: string
+    content?: string
+    created_at?: string
+    message_count?: number
+    rev_user_avatar?: string
+    rev_user_id?: number
+    rev_user_nick_name?: string
+    send_user_avatar?: string
+    send_user_id?: number
+    send_user_nickname?: string
     is_me?: boolean
 }
 
@@ -38,7 +38,7 @@ export function messageUserListByUserApi(userId: number): Promise<baseResponse<l
 }
 
 //最右侧部分，聊天的内容都是什么
-export function messageUserRecordApi(sendUserId: number, revUserId: mumber): Promise<baseResponse<listDataType<messageRecordType>>> {
+export function messageUserRecordApi(sendUserId: number, revUserId: number): Promise<baseResponse<listDataType<messageRecordType>>> {
     return useAxios.get("/api/messages", {
         params: {
             "send_user_id": sendUserId.toString(),
@@ -47,3 +47,26 @@ export function messageUserRecordApi(sendUserId: number, revUserId: mumber): Pro
     })
 }
 
+export function messageUserMeRecordApi(sendUserId: number, revUserId: number): Promise<baseResponse<listDataType<messageRecordType>>> {
+    return useAxios.get("/api/messages", {
+        params: {
+            "send_user_id": sendUserId.toString(),
+            "rev_user_id": revUserId.toString()
+        }
+    })
+}
+
+export function messageUserListByMeApi(userId: number): Promise<baseResponse<listDataType<messageType>>> {
+    return useAxios.get("/api/messages_user/" + userId.toString())
+}
+
+export interface messagePublishType {
+    content: string
+    send_user_id: number
+    rev_user_id: number
+}
+
+//发布消息
+export function messagePublishApi(data: messagePublishType): Promise<baseResponse<string>> {
+    return useAxios.post("/api/message", data);
+}

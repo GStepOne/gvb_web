@@ -11,7 +11,7 @@ const messageData = reactive<listDataType<messageType>>({
   count: 0,
 })
 
-const messageUserData = reactive<listDataType<messageRecordType>>({
+const messageUserData = reactive<listDataType<messageType>>({
   list: [],
   count: 0,
 })
@@ -51,7 +51,7 @@ async function messageCheck(data: messageType) {
   messageUserData.count = res.data.count
 }
 
-//2点获取消息记录
+//3点获取消息记录
 async function messageRecord(data: messageType) {
   //当前的收信人
   revUserId.value = data.user_id
@@ -72,8 +72,7 @@ async function messageRecord(data: messageType) {
   messageRecordData.count = res.data.count
 }
 
-
-const messageRecordData = reactive<listDataType<messageRecordType & { is_me: boolean }>>({
+const messageRecordData = reactive<listDataType<messageRecordType & { is_me?: boolean }>>({
   list: [],
   count: 0,
 })
@@ -104,7 +103,7 @@ const messageRecordData = reactive<listDataType<messageRecordType & { is_me: boo
       <div :class="{message:true,is_me:item.is_me}" v-for="item in messageRecordData.list">
         <img class="avatar" :src="item.send_user_avatar" alt="发送人头像"/>
         <div class="message-main">
-          <div class="message-user">{{ item.send_user_nick_name }}</div>
+          <div class="message-user">{{ item.send_user_nickname }}</div>
           <div class="message-content">
             <div class="content">
               <div class="txt-message">{{ item.content }}</div>

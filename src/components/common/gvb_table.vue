@@ -12,9 +12,10 @@
         >
         </a-select>
         <a-popconfirm content="是否确认执行此操作?" v-if="!props.noConfirm" @ok="actionMethod">
-          <a-button status="danger" type="primary">执行</a-button>
+          <a-button status="danger" type="primary"  v-if="actionValue !== undefined && actionValue!==''">执行</a-button>
         </a-popconfirm>
-        <a-button v-else type="primary" status="danger" v-if="actionValue !== undefined" @click="actionMethod">执行
+        <a-button v-else type="primary" status="danger" v-if="actionValue !== undefined && actionValue!==''"
+                  @click="actionMethod">执行
         </a-button>
       </div>
       <div class="action_search">
@@ -145,6 +146,7 @@ interface Props {
   searchPlaceholder?: string //搜索模糊匹配的提示词
   defaultParams?: paramsType & any //默认第一次查询的参数
   noPage?: boolean //不要分页
+
 }
 
 const props = defineProps<Props>()
@@ -248,12 +250,17 @@ function initActionGroup() {
 initActionGroup()
 
 function actionMethod() {
+  if (actionValue.value === "") {
+    return
+  }
   if (actionValue.value === 0) {
     //批量删除
     if (selectedKeys.value.length === 0) {
       Message.warning("请选择要删除的记录")
       return
     }
+
+
     removeIdData(selectedKeys.value)
     return
   }
@@ -295,8 +302,9 @@ async function removeIdData(idList: (number | string)[]) {
       Message.error(res.msg)
       return
     }
-    //执行成功
+    //执行成功 清空数据
     Message.success(res.msg)
+    selectedKeys.value = []
     getList()
     emits("remove", idList)
     return

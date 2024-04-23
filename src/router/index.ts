@@ -53,6 +53,29 @@ const router = createRouter({
                                 title: "我的信息"
                             },
                             component: () => import("../views/admin/user_center/user_info.vue")
+                        }, {
+                            path: "user_add_article",
+                            name: "user_add_article",
+                            meta: {
+                                title: "我的发布"
+                            },
+                            component: () => import("../views/admin/user_center/user_add_article_list.vue")
+                        },
+                        {
+                            path: "collects",
+                            name: "collects",
+                            meta: {
+                                title: "我的收藏"
+                            },
+                            component: () => import("../views/admin/user_center/user_collects_list.vue")
+                        },
+                        {
+                            path: "messages",
+                            name: "messages",
+                            meta: {
+                                title: "我的消息"
+                            },
+                            component: () => import("../views/admin/user_center/user_message_list.vue")
                         }
                     ]
                 },

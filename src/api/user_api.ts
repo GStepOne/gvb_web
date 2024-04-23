@@ -82,3 +82,36 @@ export interface userUpdateRequest {
 export function userUpdateApi(data: userUpdateRequest): Promise<baseResponse<string>> {
     return useAxios.put("/api/user_role", data)
 }
+
+export interface userInfoUpdateType {
+    link: string
+    nick_name: string
+    sign: string
+    avatar:string
+}
+
+export function userInfoUpdateApi(data: userInfoUpdateType): Promise<baseResponse<string>> {
+    return useAxios.put("/api/user_info", data)
+}
+
+export interface userUpdatePasswordType {
+    origin_password: string
+    re_password: string
+    password: string
+}
+
+export function userUpdatePasswordApi(data: userUpdatePasswordType): Promise<baseResponse<string>> {
+    return useAxios.put("/api/user_password", data)
+}
+
+
+export interface userBindEmailType {
+    code?: string,
+    email: string
+    password?: string
+}
+
+//用户绑定邮箱
+export function userBindEmailApi(data: userBindEmailType): Promise<baseResponse<string>> {
+    return useAxios.post("/api/user_bind_mail", data)
+}

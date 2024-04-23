@@ -4,12 +4,13 @@ import {logoutApi} from "@/api/user_api";
 import {Message} from "@arco-design/web-vue";
 import {userInfoApi} from "@/api/user_api";
 import type {userInfoType} from "@/api/user_api";
+import type {Themes} from "md-editor-v3";
 
 export interface userStoreUserInfoType {
     user_name: string
     nick_name: string
     role: number
-    user_id: number
+    userId: number
     avatar: string
     token: string
     exp: number //过期时间需要x1000
@@ -22,7 +23,7 @@ const userInfo: userStoreUserInfoType = {
     nick_name: "",
     user_name: "",
     role: 0,
-    user_id: 0,
+    userId: 0,
     avatar: "",
     token: "",
     exp: 0,
@@ -73,7 +74,7 @@ export const useStore = defineStore('counter', {
                 user_name: data.user_name,
                 nick_name: data.nick_name,
                 role: info.role,
-                user_id: info.user_id,
+                userId: info.user_id,
                 avatar: data.avatar,
                 token: token,
                 exp: info.exp,
@@ -109,15 +110,16 @@ export const useStore = defineStore('counter', {
             await logoutApi()
             //置空用户
             this.clearUserInfo()
-            //清空localstorage里面
-            localStorage.setItem("userInfo","")
+
         },
         clearUserInfo() {
             this.userInfo = userInfo
+            //清空localstorage里面
+            localStorage.setItem("userInfo","")
         }
     },
     getters: {
-        themeString(): string {
+        themeString(): Themes {
             return this.theme ? "light" : "dark"
         },
         isLogin(): boolean {

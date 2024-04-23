@@ -5,7 +5,6 @@ import {ref} from "vue";
 interface Props {
   data: messageType[];
 }
-
 const props = defineProps<Props>()
 //选中的是哪个
 const active = ref<number>(0)

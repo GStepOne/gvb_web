@@ -25,6 +25,7 @@
     width: 60px;
     height: 60px;
     transition: all .3s;
+    border-radius: 50%;
   }
 
   .logo_head {

@@ -1,15 +1,9 @@
-<style lang="scss">
-
-//.gvb_image_upload {
-//  .arco-upload-list-picture {
-//    //width: inherit; //这就取消了自己的宽度
-//  }
-//}
-
+<style scoped lang="scss">
 </style>
 <template>
   <div class="image_list_view">
     <a-modal title="图片上传" @before-open="beforeOpen" v-model:visible="visible" @ok="refresh">
+      <!-- v-model:file-list="fileList" 建立双向绑定，:file-list="fileList" 子组件传递数据-->
       <a-upload :headers="{token: store.userInfo.token}"
                 list-type="picture-card"
                 action="/api/images"
@@ -28,7 +22,6 @@
                default-delete
                add-label="图片上传"
                ref="gvbTable"
-
                search-placeholder="搜索图片名称"
                @add="visible=true"
                no-edit
@@ -40,7 +33,6 @@
 
       <template #action_left="{record}:{record:imageType}">
         <a style="margin-right: 10px" :href="record.path" :download="record.name">
-
           <a-button type="primary">下载图片
             <template #icon>
               <IconDownload></IconDownload>
@@ -78,7 +70,8 @@ const columns = [
   {title: 'id', dataIndex: 'id'},
   {title: '名字', dataIndex: 'name'},
   {
-    title: '上传类型', dataIndex: 'image_type', render: ({record}: { record: imageType }) => {
+    title: '上传类型', dataIndex: 'image_type', render: (data:any) => {
+      const record = data.record as imageType
       let color = "red"
       if (record.image_type === "本地") {
         color = "green"
@@ -105,10 +98,7 @@ function edit(record: RecordType<userInfoType>): void {
   updateUserForm.role = record.role_id //点开弹框的时候
   updateUserForm.nick_name = record.nick_name
   updateVisible.value = true
-
 }
-
-
 const visible = ref(false)
 const gvbTable = ref()
 

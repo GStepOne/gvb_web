@@ -2,7 +2,7 @@
 import {reactive, ref} from "vue";
 import {type menuCreateRequest, type ImageIdSortList, type bannerType, menuUpdateApi} from "@/api/menu_api";
 import {menuCreateApi} from "@/api/menu_api";
-import {imageIDListApi, imageListApi} from "@/api/image_api";
+import {imageIdListApi, imageListApi} from "@/api/image_api";
 import type {imageIdType} from "@/api/image_api";
 import {Message} from "@arco-design/web-vue";
 import type {baseResponse, listDataType} from "@/api";
@@ -27,8 +27,8 @@ const imageIdList = ref<any>([])
 
 //获取图片列表
 async function getImageList() {
-  let res = await imageIDListApi()
-  imageIdList.value = res.data.list
+  let res = await imageIdListApi()
+  imageIdList.value = res.data
 }
 
 //直接调用一下获取数据
@@ -171,7 +171,7 @@ function beforeOpen() {
           </template>
         </a-form-item>
 
-        <!-banner图-->
+        <!-- banner图-->
         <a-form-item label="banner图">
           <a-select multiple v-model="form.imageIdList" placeholder="选择banner图" allow-clear>
             <!--            <template #label="{data}">-->
