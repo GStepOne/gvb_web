@@ -101,6 +101,13 @@ const router = createRouter({
                                 title: "图片列表"
                             },
                             component: () => import("../views/admin/article/image_list.vue")
+                        }, {
+                            path: "comment_list",
+                            name: "comment_list",
+                            meta: {
+                                title: "评论列表"
+                            },
+                            component: () => import("../views/admin/article/comment_list.vue")
                         }
                     ]
                 },
