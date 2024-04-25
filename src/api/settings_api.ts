@@ -1,4 +1,5 @@
 import {type baseResponse, type listDataType, useAxios} from "@/api/index";
+import type {chatGroupConfigType} from "@/api/chat_api";
 
 export interface siteInfoType {
     addr: string
@@ -61,19 +62,19 @@ export interface QiniuType {
     enable: boolean
 }
 
-export type SettingTypes = EmailType|QQType|JwtType|QiniuType
+export type SettingTypes = EmailType | QQType | JwtType | QiniuType | chatGroupConfigType
 
-export type SettingInfo = "qq" | "email" | "qiniu" | "jwt"
+export type SettingInfo = "qq" | "email" | "qiniu" | "jwt" | "chat_group"
 
 export function settingsInfoApi<T extends EmailType | QQType | JwtType | QiniuType>(name: SettingInfo): Promise<baseResponse<T>> {
     return useAxios.get("/api/settings/" + name.toString())
 }
 
-export function settingsInfoUpdateApi<T extends EmailType | QQType | JwtType | QiniuType>(name: SettingInfo, data: any): Promise<baseResponse<string>> {
+export function settingsInfoUpdateApi<T extends SettingTypes>(name: SettingInfo, data: T): Promise<baseResponse<string>> {
     return useAxios.put("/api/settings/" + name.toString(), data)
 }
 
-export interface helpType{
+export interface helpType {
     title: string;
     abs?: string,
     content?: string,

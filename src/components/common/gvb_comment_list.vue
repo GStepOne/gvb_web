@@ -1,72 +1,45 @@
 <script setup lang="ts">
 
 import {relativeCurrentTime} from "@/utils/date";
-import {IconDelete, IconMessage} from "@arco-design/web-vue/es/icon";
-import {commentCreateApi, commentDeleteApi, commentListApi, type commentType} from "@/api/comment_api";
-import Gvb_comment_list from "@/components/common/gvb_comment_list.vue";
+import {IconDelete, IconMessage, IconThumbUp} from "@arco-design/web-vue/es/icon";
+import {
+  type commentAddType,
+  commentCreateApi,
+  commentDeleteApi, commentDiggApi,
+  type commentType
+} from "@/api/comment_api";
+import gvb_comment_list from "@/components/common/gvb_comment_list.vue";
 import {Message} from "@arco-design/web-vue";
-import {reactive} from "vue";
+import {nextTick, reactive, ref} from "vue";
 import type {paramsType} from "@/api";
 import {useStore} from "@/stores";
 
-const store = useStore()
 interface Props {
   data: commentType[]
 }
 
 const props = defineProps<Props>()
-
-async function deleteComment(record: commentType) {
-  let res = await commentDeleteApi(record.id)
-  if (res.code) {
-    Message.error(res.msg)
-    return
-  }
-  Message.success(res.msg)
-  //目的是刷新列表
-  getData()
-}
-
-async function createComment() {
-
-  if (!store.isLogin) {
-    Message.warning("请先登录");
-    return
-  }
-
-  if (addCommentForm.content.trim().length === 0) {
-    Message.warning("总得说点什么嘛");
-    return
-  }
-
-  if (addCommentForm.article_id === "") {
-    Message.warning("请选择一篇文章");
-    return
-  }
-
-  let res = await commentCreateApi()
-  if (res.code) {
-    Message.error(res.msg)
-    return
-  }
-  Message.success(res.msg)
-  //清空之前的
-  addCommentForm.content = ""
-
-  getData()
-}
-
 const params = reactive<paramsType>()
 
-async function getData() {
-  let res = await commentListApi(props.articleId)
-  data.list = res.data.list
-  data.count = res.data.count
-}
+const store = useStore();
+
+const saveId = ref<number>(0)
 
 function applyShow(record: commentType) {
-  record.isApply = true
+  if (!record) {
+    return
+  }
+  record.isApply = !record.isApply
+  if (!record.isApply) {
+    // saveId.value = 0
+    return
+  }
+  nextTick(() => {
+    let dom = document.querySelector(`.comment_apply_ipt_${record.id.toString()} input`) as HTMLInputElement
+    dom.focus()
+  })
 }
+
 async function applyComment(record: commentType) {
   //组装数据
   if (!store.isLogin) {
@@ -93,27 +66,100 @@ async function applyComment(record: commentType) {
   Message.success(res.msg)
   //清空之前的
   record.applyContent = ""
+  //刷新之后 仍旧保留回复的输入框
+  saveId.value = record.id
 
-  getData()
+  getListAgain()
+}
+
+async function deleteComment(record: commentType) {
+  let res = await commentDeleteApi(record.id)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  //目的是刷新列表
+  getListAgain()
+}
+
+const emits = defineEmits(["list"])
+
+function getListAgain() {
+  //让父组件去刷新
+  emits("list")
+}
+
+//评论点赞
+async function commentDigg(record: commentType) {
+  let res = await commentDiggApi(record.id)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  record.digg_count++
 }
 
 </script>
 
 <template>
-  <gvb_comment_list data=""></gvb_comment_list>
   <div class="gvb_comment_list">
     <a-comment
-        v-for="item in data.list"
+        v-for="item in data"
         :content="item.content"
         :author="item.user.nick_name"
         :avatar="item.user.avatar"
         :datetime="relativeCurrentTime(item.created_at)"
     >
-      <gvb_comment_list :data="item.sub_comment"></gvb_comment_list>
+      <!--回复信息-->
+      <template #actions>
+        <span class="action" @click="commentDigg(item)"><IconThumbUp/>点赞({{ item.digg_count }})</span>
+        <span class="action" @click="applyShow(item)"><IconMessage/>回复</span>
+        <a-popconfirm
+            v-if="store.isAdmin || store.userInfo.userId === item.user_id"
+            content="是否删除这条评论?"
+            @ok="deleteComment(item)">
+          <span class="action"><IconDelete/>删除</span>
+        </a-popconfirm>
+      </template>
+      <a-comment
+          :avatar="store.userInfo.avatar"
+          :author="store.userInfo.nick_name"
+          v-if="item.isApply || saveId === item.id"
+      >
+        <template #content>
+          <div class="apply_comment">
+            <a-input :class="'comment_apply_ipt_'+item.id" @keydown.enter.ctrl="applyComment(item)"
+                     :placeholder="'回复'+item.user.nick_name"
+                     v-model="item.applyContent"
+                     @click="applyShow(sub)"></a-input>
+            <a-button type="primary" style="margin-left: 10px" @click="applyComment(item)">回复</a-button>
+          </div>
+        </template>
+      </a-comment>
+      <!--递归自己的组件-->
+      <gvb_comment_list :data="item.sub_comments" @list="emits('list')"></gvb_comment_list>
     </a-comment>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
+.gvb_comment_list {
+  height: 100%;
+  overflow-x: auto;
+  margin-top: 10px;
 
+  .action {
+    cursor: pointer;
+  }
+
+  .apply_comment {
+    display: flex;
+  }
+
+  .arco-comment-inner-comment {
+    margin-top: 8px;
+  }
+}
 </style>

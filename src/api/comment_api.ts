@@ -29,7 +29,7 @@ export interface commentType {
     parent_comment_id: number | null, //父评论
     user: commentUserType,
     user_id: string,
-    sub_comment: commentType[],
+    sub_comments: commentType[],
     applyContent: string, //人为加上的
     isApply: boolean //是否显示回复那个组件
 }
@@ -58,4 +58,9 @@ export interface commentAddType {
 //创建评论
 export function commentCreateApi(data: commentType): Promise<baseResponse<string>> {
     return useAxios.post("/api/comment", data)
+}
+
+//这里是给评论点赞
+export function commentDiggApi(id: number): Promise<baseResponse<string>> {
+    return useAxios.put("/api/comment/" + id.toString())
 }

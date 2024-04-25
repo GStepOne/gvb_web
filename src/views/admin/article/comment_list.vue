@@ -5,10 +5,12 @@ import type {listDataType, paramsType} from "@/api";
 import {commentArticleListApi, type commentArticleType} from "@/api/comment_api";
 import {IconDelete} from "@arco-design/web-vue/es/icon";
 import Gvb_comment from "@/components/common/gvb_comment.vue";
+import router from "@/router";
+import {useRoute} from "vue-router";
 
 const store = useStore()
-const articleId = ref<string>("")
-
+const route = useRoute();
+const articleId = ref<string | null>(route.query.id as string);
 //最左侧的数据
 const articleList = reactive<listDataType<commentArticleType>>({
   list: [],
@@ -24,13 +26,13 @@ async function getArticleList() {
 }
 
 getArticleList()
-
-
 function checkItem(record: commentArticleType) {
-  console.log('ddd',record.id)
-  console.log('avvv',  articleId.value)
   articleId.value = record.id
-  console.log('avvv2',  articleId.value)
+  router.push({
+    query: {
+      id: record.id
+    }
+  })
 }
 </script>
 
@@ -61,7 +63,7 @@ function checkItem(record: commentArticleType) {
         <a-pagination simple :total="articleList.count"></a-pagination>
       </div>
     </div>
-
+    <!--评论组件-->
     <div class="comment">
       <gvb_comment :article-id="articleId"></gvb_comment>
     </div>
