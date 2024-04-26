@@ -40,7 +40,7 @@
 import {
   IconMenu,
   IconApps,
-  IconUser,
+  IconUser, IconChineseFill, IconArchive, IconEmail, IconSettings,
 } from '@arco-design/web-vue/es/icon';
 import {type Component, watch} from "vue";
 import {useRouter, useRoute} from "vue-router";
@@ -62,37 +62,37 @@ interface MenuType {
 const menuList: MenuType[] = [
   {key: "1", title: "首页", icon: IconMenu, name: "home", child: []},
   {
-    key: "2", title: "个人中心", icon: IconUser, name: "user_center", child: [
-      {key: "2-1", title: "我的信息", icon: IconUser, name: "user_info", child: []},
-      {key: "2-2", title: "我的发布", icon: IconUser, name: "user_add_article", child: []},
-      {key: "2-3", title: "我的收藏", icon: IconUser, name: "collects", child: []},
-      {key: "2-4", title: "我的消息", icon: IconUser, name: "messages", child: []},
+    key: "2", title: "个人中心", icon: IconChineseFill, name: "user_center", child: [
+      {key: "2-1", title: "我的信息", name: "user_info", child: []},
+      {key: "2-2", title: "我的发布", name: "add_article", child: []},
+      {key: "2-3", title: "我的收藏", name: "user_collects", child: []},
+      {key: "2-4", title: "我的消息", name: "user_messages", child: []},
     ]
   },
   {
-    key: "3", title: "文章管理", icon: IconApps, name: "article", child: [
-      {key: "3-1", title: "文章列表", icon: IconApps, name: "article_list", child: []},
-      {key: "3-2", title: "图片列表", icon: IconApps, name: "image_list", child: []},
-      {key: "3-3", title: "评论列表", icon: IconApps, name: "comment_list", child: []},
+    key: "3", title: "文章管理", icon: IconArchive, name: "article", child: [
+      {key: "3-1", title: "文章列表", name: "article_list", child: []},
+      {key: "3-2", title: "图片列表", name: "image_list", child: []},
+      {key: "3-3", title: "评论列表", name: "comment_list", child: []},
     ]
   },
   {
     key: "4", title: "用户管理", icon: IconUser, name: "users", child: [
-      {key: "4-1", title: "用户列表", icon: IconUser, name: "user_list", child: []},
-      {key: "4-2", title: "消息列表", icon: IconUser, name: "message_list", child: []},
+      {key: "4-1", title: "用户列表", name: "user_list", child: []},
+      {key: "4-2", title: "消息列表", name: "message_list", child: []},
     ]
   },
   {
-    key: "5", title: "群聊管理", icon: IconMenu, name: "chat_group", child: [
-      {key: "5-1", title: "聊天记录", icon: IconUser, name: "chat_list", child: []},
+    key: "5", title: "群聊管理", icon: IconEmail, name: "chat_group", child: [
+      {key: "5-1", title: "聊天记录", name: "chat_list", child: []},
     ]
   },
   {
-    key: "6", title: "系统管理", icon: IconMenu, name: "system", child: [
-      {key: "6-1", title: "菜单列表", icon: IconUser, name: "menu_list", child: []},
-      {key: "6-2", title: "广告列表", icon: IconUser, name: "promotion_list", child: []},
-      {key: "6-3", title: "系统日志", icon: IconUser, name: "log_list", child: []},
-      {key: "6-4", title: "系统配置", icon: IconUser, name: "system_settings", child: []},
+    key: "6", title: "系统管理", icon: IconSettings, name: "system", child: [
+      {key: "6-1", title: "菜单列表", name: "menu_list", child: []},
+      {key: "6-2", title: "广告列表", name: "promotion_list", child: []},
+      {key: "6-3", title: "系统日志", name: "log_list", child: []},
+      {key: "6-4", title: "系统配置", name: "system_settings", child: []},
     ]
   }
 ]
@@ -109,6 +109,7 @@ watch(() => route.name, () => {
 
 
 function clickMenu(name: string) {
+  console.log("clickMenu", name)
   router.push({
     name: name
   })

@@ -31,6 +31,8 @@ export interface chatGroupConfigType {
     is_send_image: boolean
     is_paste: boolean
     is_send_file: boolean
+    is_markdown: boolean
+    content_length: number
 }
 
 

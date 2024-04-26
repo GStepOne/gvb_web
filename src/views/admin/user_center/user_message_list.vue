@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Gvb_message_record from "@/components/common/gvb_message_record.vue";
-import {reactive,ref} from "vue";
+import {reactive, ref} from "vue";
 import {type messagePublishType, type messageType, messageUserListByMeApi} from "@/api/message_api";
 import {useStore} from "@/stores";
 import type {listDataType} from "@/api";
@@ -22,14 +22,16 @@ async function getMessageData() {
 getMessageData()
 
 const revUserId = ref<number>(0)
+const revNickname = ref<string>("")
 const userId = ref<number>(0)
 const sendUserId = ref<number>(0)
 
 //2 获取当前登陆者消息记录
 async function messageUserCheck(data: messageType) {
   //当前的收信人
-  // messagePublishData.rev_user_id = parseInt(data.user_id) //记录当前收信人
   revUserId.value = parseInt(data.user_id)
+  revNickname.value = data.nickname
+
   userId.value = parseInt(data.user_id)
   sendUserId.value = store.userInfo.userId
 }
@@ -41,7 +43,7 @@ async function messageUserCheck(data: messageType) {
       <gvb_message_list @check="messageUserCheck" :data="messageData.list"></gvb_message_list>
     </div>
     <div class="user_record_menu">
-    <gvb_message_record :rev_user_id="revUserId" :userId ="userId" :send_user_id="sendUserId"></gvb_message_record>
+      <gvb_message_record :rev_user_id="revUserId" :userId="userId" :nickname="revNickname" :send_user_id="sendUserId"></gvb_message_record>
     </div>
   </div>
 

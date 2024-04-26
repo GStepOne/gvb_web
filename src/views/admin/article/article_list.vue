@@ -33,7 +33,7 @@
 </style>
 <template>
   <div class="article_list_view">
-    <gvb_article_list></gvb_article_list>
+    <gvb_article_list :is_user="false"></gvb_article_list>
   </div>
 </template>
 

@@ -8,6 +8,10 @@ import {settingsInfoApi} from "@/api/settings_api";
 import type {chatGroupConfigType} from "@/api/chat_api";
 import {IconImage, IconFile, IconRefresh} from "@arco-design/web-vue/es/icon";
 import {dateTimeFormat} from "../../utils/date";
+import 'md-editor-v3/lib/style.css'
+import {MdEditor, MdPreview} from "md-editor-v3";
+
+import {onUploadImg} from "@/api/image_api";
 
 const chatRecordData = reactive<listDataType<chatType>>({
   list: [],
@@ -29,7 +33,6 @@ const params = reactive<paramsType>({
 })
 
 async function getGroupData() {
-  console.log('hhhh')
   let res = await chatRecordApi(params)
   if (res.code) {
     Message.error(res.msg)
@@ -73,9 +76,6 @@ async function removeChatGroup() {
   getGroupData()
 }
 
-async function imageEvent() {
-  Message.warning("开发中")
-}
 
 const loading = ref<boolean>(true)
 // websocket
@@ -168,11 +168,11 @@ function sendData() {
 }
 
 
-function SendImageEvent(){
-  Message.warning("图片上传开发中")
+function SendImageEvent() {
+
 }
 
-function SendFileEvent(){
+function SendFileEvent() {
   Message.warning("文件上传开发中")
 }
 
@@ -185,7 +185,7 @@ function SendFileEvent(){
         <div class="title">
           {{ props.config.welcome_title }}
         </div>
-        <div class="outline" v-if="props.config.is_online_people">在线人数{{
+        <div class="outline" v-if="props.config.is_online_people">在线人数: {{
             props.config.is_online_people ? chatData.onlineCount : '∞'
           }}
         </div>
@@ -213,7 +213,16 @@ function SendFileEvent(){
                   <div class="message-user">{{ item.nick_name }}</div>
                   <div class="message-content">
                     <div class="content">
-                      <div class="txt-message">{{ item.content }}</div>
+                      <div :class="{'txt-message':true,is_markdown:props.config.is_markdown}">
+                        <template v-if="!config.is_markdown">
+                          {{ item.content }}
+                        </template>
+
+                        <template v-else>
+                          <MdPreview v-model="item.content" :editorId="'md__'+item.id">
+                          </MdPreview>
+                        </template>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -233,7 +242,7 @@ function SendFileEvent(){
           <div class="icon" v-if="props.config.is_send_image" @click="SendImageEvent">
             <IconImage></IconImage>
           </div>
-          <div class="icon" v-if="props.config.is_send_file"  @click="SendFileEvent">
+          <div class="icon" v-if="props.config.is_send_file" @click="SendFileEvent">
             <IconFile></IconFile>
           </div>
         </div>
@@ -241,9 +250,23 @@ function SendFileEvent(){
           <a-button type="primary" @click="websocketConnect">进入聊天室</a-button>
         </div>
 
-        <a-textarea @keydown.enter.ctrl="sendData" v-model="content" auto-size placeholder="聊天内容"
-                    style="height: 80%"></a-textarea>
-        <a-button type="primary" class="send_button" @click="sendData"> 发送</a-button>
+        <a-textarea v-if="!props.config.is_markdown"
+                    show-word-limit :max-length=100
+                    @keydown.enter.ctrl="sendData"
+                    v-model="content" auto-size
+                    placeholder="聊天内容"
+                    style="height: 80%">
+        </a-textarea>
+
+        <MdEditor :max-length="props.config.content_length?props.config.content_length:100"
+                  :on-upload-img="onUploadImg"
+                  :show-word-limit="1"
+                  v-else
+                  placeholder="聊天内容"
+                  v-model="content"
+                  :toolbars="[]"
+                  :preview="false"/>
+        <a-button type="primary" class="send_button" @click="sendData">发送</a-button>
       </div>
     </a-spin>
   </div>
@@ -255,12 +278,6 @@ function SendFileEvent(){
   height: 100%;
   background-color: var(--color-bg-1);
   border-radius: 5px;
-
-
-  //.record_list_view {
-  //  padding: 5px;
-  //  overflow: hidden;
-  //}
 
   .arco-spin {
     width: 100%;
@@ -296,14 +313,13 @@ function SendFileEvent(){
 
   .record_list {
     overflow-y: auto;
-    padding: 20px;
+    padding: 10px;
     max-height: 600px;
-    height: calc(100vh - 420px);
+    height: calc(100vh - 300px);
 
     .message {
       display: flex;
       margin-top: 10px;
-
 
       .avatar {
         width: 40px;
@@ -320,29 +336,51 @@ function SendFileEvent(){
           .content {
             margin-left: 5px;
             display: flex;
+
+            .txt-message {
+              background-color: var(--color-fill-2);
+              border-radius: 5px;
+              padding: 2px;
+              position: relative;
+              width: fit-content;
+              white-space: break-spaces;
+              word-break: break-all;
+
+              &.is_markdown {
+                white-space: inherit;
+                word-break: inherit;
+              }
+
+              &:before {
+                content: "";
+                display: block;
+                position: absolute;
+                left: -20px;
+                top: 35%;
+                border-width: 5px 10px;
+                border-style: solid;
+                border-color: transparent var(--color-fill-2) transparent transparent;
+              }
+
+              .md-editor {
+                background-color: inherit;
+
+                .md-editor-preview {
+
+                  .md-editor-preview-wrapper {
+                    padding: 0;
+
+                    img {
+                      border: 0;
+                    }
+                  }
+                }
+              }
+            }
           }
         }
 
-        .txt-message {
-          background-color: rgb(var(--success-4), 0.65);
-          border-radius: 5px;
-          padding: 10px;
-          position: relative;
-          width: fit-content;
-          white-space: break-spaces;
-          word-break: break-all;
 
-          &:before {
-            content: "";
-            display: block;
-            position: absolute;
-            left: -20px;
-            top: 35%;
-            border-width: 5px 10px;
-            border-style: solid;
-            border-color: transparent rgb(var(--success-4), 0.65) transparent transparent;
-          }
-        }
       }
 
       &.is_me {
@@ -357,27 +395,33 @@ function SendFileEvent(){
             text-align: right;
           }
 
-          .txt-message {
-            &:before {
-              content: "";
-              display: block;
-              position: absolute;
-              right: -20px;
-              left: inherit;
-              top: 40%;
-              border-width: 5px 10px;
-              border-style: solid;
-              border-color: transparent transparent transparent rgb(var(--success-4), 0.65);
+          .message-content {
+            .content {
+              .txt-message {
+                &:before {
+                  content: "";
+                  display: block;
+                  position: absolute;
+                  right: -20px;
+                  left: inherit;
+                  top: 40%;
+                  border-width: 5px 10px;
+                  border-style: solid;
+                  border-color: transparent transparent transparent var(--color-fill-2);
+                }
+              }
             }
           }
         }
       }
     }
 
+
     .system {
       display: flex;
       justify-content: center;
       margin-bottom: 20px;
+      margin-top: 20px;
 
       .txt-message {
         padding: 5px 10px;
@@ -420,7 +464,6 @@ function SendFileEvent(){
 
   }
 
-
   .footer {
     height: 160px;
     border-top: 1px solid var(--bg);
@@ -430,8 +473,12 @@ function SendFileEvent(){
 
     .send_button {
       position: absolute;
-      right: 30px;
-      bottom: 45px;
+      right: 15px;
+      bottom: 40px;
+    }
+
+    .md-editor {
+      height: 100%;
     }
 
     .menu {
@@ -458,16 +505,19 @@ function SendFileEvent(){
       }
     }
 
+    .arco-textarea-wrapper {
+      height: inherit;
+    }
+
     .inRoom {
       position: absolute;
       width: calc(100% - 22px);
       height: calc(100% - 23px);
-      //border: 1px solid red;
       display: flex;
       justify-content: center;
       align-items: center;
       z-index: 1;
-      background-color: var(--login_bg);
+      background-color: rgb(var(---6));;
     }
   }
 }

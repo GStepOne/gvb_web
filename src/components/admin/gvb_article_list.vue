@@ -33,15 +33,23 @@
 </style>
 <template>
   <div class="article_list_view">
-    <!--@ok 由子组件发出的事件 emits(ok)-->
-    <gvb_article_upadte v-model:visible="updateVisible"
-                        :data="recordData"
+    <!--@ok 接收子组件发出的ok事件 emits(ok)-->
+    <gvb_article_upadte
+        v-model:visible="updateVisible"
+         :data="recordData"
     ></gvb_article_upadte>
 
     <!--抽屉-->
-    <gvb_article_drawer v-model:visible="createVisible" @ok="refresh"></gvb_article_drawer>
-    <gvb_article_content_drawer v-model:visible="articleContentVisible"
-                                :id="articleUpdateId"></gvb_article_content_drawer>
+    <gvb_article_drawer
+        v-model:visible="createVisible"
+        @ok="refresh">
+    </gvb_article_drawer>
+
+    <!--内容的抽屉-->
+    <gvb_article_content_drawer
+        v-model:visible="articleContentVisible"
+        :id="articleUpdateId">
+    </gvb_article_content_drawer>
 
     <gvb_table :url="articleListApi"
                delete-url="/api/article"
@@ -186,7 +194,7 @@ function beforeOpen() {
 
 //让更新文章的弹窗不为真
 const updateVisible = ref(false)
-
+//对象是响应式的，意味着对其属性的任何更改都会触发组件中的响应性，从而在数据更改时自动更新 UI。
 const recordData = reactive<articleUpdateType>({
   id: "",
   tags: [],

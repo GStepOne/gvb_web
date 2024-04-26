@@ -54,24 +54,24 @@ const router = createRouter({
                             },
                             component: () => import("../views/admin/user_center/user_info.vue")
                         }, {
-                            path: "user_add_article",
-                            name: "user_add_article",
+                            path: "add_article",
+                            name: "add_article",
                             meta: {
                                 title: "我的发布"
                             },
                             component: () => import("../views/admin/user_center/user_add_article_list.vue")
                         },
                         {
-                            path: "collects",
-                            name: "collects",
+                            path: "user_collects",
+                            name: "user_collects",
                             meta: {
                                 title: "我的收藏"
                             },
                             component: () => import("../views/admin/user_center/user_collects_list.vue")
                         },
                         {
-                            path: "messages",
-                            name: "messages",
+                            path: "user_messages",
+                            name: "user_messages",
                             meta: {
                                 title: "我的消息"
                             },

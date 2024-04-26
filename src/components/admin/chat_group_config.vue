@@ -23,11 +23,14 @@ const form = reactive<chatGroupConfigType>({
   is_send_image: false,
   is_send_file: false,
   is_paste: false,
+  is_markdown: false,
+  content_length: 100,
 })
 
 const is_show = ref<boolean>(true)
 
 const emits = defineEmits(["getConfig"])
+
 //更新配置
 async function updateConfig() {
   let res = await settingsInfoUpdateApi("chat_group", props.config)
@@ -79,17 +82,17 @@ async function updateConfig() {
           </template>
         </a-form-item>
 
-        <a-form-item label="显示人数">
-          <a-switch v-model="props.config.is_online_people"></a-switch>
-          <template #extra>
-            聊天头部下方显示在线人数
-          </template>
-        </a-form-item>
-
         <a-form-item label="可发图片">
           <a-switch v-model="props.config.is_send_image"></a-switch>
           <template #extra>
-            配置后可以显示图片
+            配置后可以发送图片
+          </template>
+        </a-form-item>
+
+        <a-form-item label="可发文件">
+          <a-switch v-model="props.config.is_send_file"></a-switch>
+          <template #extra>
+            配置后可以发送文件
           </template>
         </a-form-item>
 
@@ -99,6 +102,20 @@ async function updateConfig() {
             配置后可以粘贴上传图片
           </template>
         </a-form-item>
+
+        <a-form-item label="支持md">
+          <a-switch v-model="props.config.is_markdown"></a-switch>
+          <template #extra>
+            配置后输入框为markdown格式
+          </template>
+        </a-form-item>
+
+        <a-form-item label="文本长度">
+          <a-switch v-model="props.config.content_length"></a-switch>
+          <template #extra>
+            配置内容最大长度
+          </template>
+        </a-form-item>
       </a-form>
       <a-button type="primary" @click="updateConfig">更新配置</a-button>
     </div>
@@ -106,5 +123,9 @@ async function updateConfig() {
 </template>
 
 <style scoped lang="scss">
-
+.chat_group_config_view {
+  .chat_group {
+    overflow-y: hidden;
+  }
+}
 </style>

@@ -128,11 +128,15 @@ function randomCover() {
 }
 
 
-const coverSrc = (value: number) => {
-  return computed((): string => {
-    const image = imageIdList.value.find((item) => item.id as number === value) as imageIdType
-    return image.path
-  })
+const coverSrc = (data: any) => {
+  let value = data.value;
+  if (value) {
+    return computed((): string => {
+      const image = imageIdList.value.find((item) => item.id as number === value) as imageIdType
+      console.log('image', image)
+      return image.path
+    })
+  }
 }
 
 
@@ -141,7 +145,8 @@ const coverSrc = (value: number) => {
   <div>
     <a-modal
         width="30%"
-        :title="props.title" :visible="props.visible"
+        :title="title"
+        :visible="props.visible"
         modal-class="gvb_article_modal_body"
         @cancel="emits('update:visible',false)"
         :on-before-ok="okHandler">
@@ -187,8 +192,8 @@ const coverSrc = (value: number) => {
                 <img height="20" :alt="item.name" :src="item.path"/> {{ item.name }}
               </div>
             </a-option>
-            <template #label="{data}">
-              <img style="border-radius: 5px" width="40px" height="40px" :src="coverSrc(data.value).value" alt=""/>
+            <template #label="{ data }">
+              <img style="border-radius: 5px" width="40px" height="40px" :src="coverSrc(data)" alt=""/>
               <label style="margin-left: 10px ">{{ data.label }}</label>
             </template>
           </a-select>

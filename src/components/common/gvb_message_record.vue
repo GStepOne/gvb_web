@@ -19,6 +19,7 @@ const messageData = reactive<listDataType<messageType>>({
 interface Props {
   rev_user_id: number,
   send_user_id: number,
+  nickname: string
 }
 
 const props = defineProps<Props>()
@@ -104,6 +105,7 @@ watch(() => props.rev_user_id, () => {
 
 <template>
   <div class="gvb_message_record_component">
+    <div class="head">与{{ props.nickname ? props.nickname : '网友'}}的聊天</div>
     <div class="record_list">
       <div :class="{message:true,is_me:item.is_me}" v-for="item in messageRecordData.list">
         <img class="avatar" :src="item.send_user_avatar" alt="发送人头像"/>
@@ -132,6 +134,16 @@ watch(() => props.rev_user_id, () => {
   width: 100%;
   flex-grow: 1;
   height: calc(100vh - 90px);
+
+  .head {
+    height: 60px;
+    border-bottom: 1px solid var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+  }
 
   .record_list {
     padding: 20px;

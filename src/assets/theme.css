@@ -2,10 +2,16 @@
 body {
     --bg: #f0eeee;
     --active: rgb(var(--arcoblue-6));
-    --login_bg:rgba(255,255,255,0.8)
+    --login_bg: rgba(255, 255, 255, 0.8);
+    --charts_color1: #59d9c2;
+    --charts_color2: #7789e4;
+    --sun_text: green;
 }
 
 body[arco-theme="dark"] {
     --bg: #282828;
-    --login_bg:rgba(0,0,0,0.9)
+    --login_bg: rgba(0, 0, 0, 0.9);
+    --charts_color1: #d97559;
+    --charts_color2: #e4c477;
+    --sun_text: green;
 }

@@ -22,6 +22,10 @@ const config = reactive<chatGroupConfigType>({
   is_online_people: false,
   is_send_image: false,
   is_paste: false,
+  is_send_file: false,
+  is_paste: false,
+  is_markdown: false,
+  content_length: 100,
 })
 
 //获取配置
@@ -33,7 +37,6 @@ async function getConfig() {
     Message.error(res.msg);
     return
   }
-  // is_show.value = true
   Object.assign(config, res.data)
 
   console.log("now", config)
@@ -57,8 +60,9 @@ getConfig()
 <style scoped lang="scss">
 .chat_list_view {
   display: flex;
-  height: calc(100vh - 108px);
+  height: 100vh;
   justify-content: space-between;
+  margin-bottom: 20px;
 
   .record_list_view {
     width: calc(100% - 300px);
