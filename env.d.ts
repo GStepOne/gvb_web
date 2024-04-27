@@ -15,3 +15,9 @@ declare module 'vue-router' {
     }
 }
 
+//声明全局变量 vue的 views里面的 都是局部变量，所以使用的时候 要先赋值
+//const isLopTop = isLoptops 这样就可以在views里面使用了
+declare global {
+    const isLoptops: boolean
+}
+

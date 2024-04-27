@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import {weatherApi, type weatherType} from "@/api/data_api";
 import {computed, reactive, ref} from "vue";
-import {Message} from "@arco-design/web-vue";
-import {types} from "sass";
-import Number = types.Number;
 
 const data = reactive<weatherType>({
   province: "",
@@ -13,8 +10,9 @@ const data = reactive<weatherType>({
   winddirection: ""
 })
 
-const isShow = ref(true)
+const isShow = ref(false)
 
+//这个方法比compute要快
 async function getWeatherData() {
   let val = sessionStorage.getItem("weather")
   if (val != null) {
@@ -22,6 +20,8 @@ async function getWeatherData() {
       console.log("从session里获取")
       let jsonData = JSON.parse(val)
       Object.assign(data, jsonData)
+      console.log(data)
+      isShow.value = true
       return
     } catch (e) {
       sessionStorage.removeItem("weather")
@@ -30,43 +30,45 @@ async function getWeatherData() {
 
   let res = await weatherApi()
   if (res.code) {
-    // Message.error(res.code)
+    console.log('天气数据获取失败')
     return
   }
   Object.assign(data, res.data)
-  isShow.value = false
+  isShow.value = true
 
   sessionStorage.setItem("weather", JSON.stringify(data))
 }
 
 getWeatherData()
 
-// const weatherDesc = computed(() => {
-//   const weatherNumber = Number(data.temperature ? data.temperature : 0)
-//   if (weatherNumber > 40) {
-//     return "天气炎热，请注意避暑"
-//   }
-//
-//   if (weatherNumber > 30) {
-//     return "天气炎热，西瓜🍉空调造起来啊"
-//   }
-//
-//   if (weatherNumber > 20) {
-//     return "天气舒适，适合户外运动"
-//   }
-//
-//   if (weatherNumber > 0) {
-//     return "天气好冷，建议室内运动"
-//   }
-//
-// })
+const weatherDesc = computed(() => {
+  const weatherNumber = parseInt(data.temperature)
+  if (weatherNumber > 40) {
+    return "天气炎热，请注意避暑"
+  }
+
+  if (weatherNumber > 30) {
+    return "天气炎热，西瓜🍉空调造起来啊"
+  }
+
+  if (weatherNumber > 20) {
+    return "天气舒适，适合户外运动"
+  }
+
+  if (weatherNumber > 0) {
+    return "天气好冷，建议室内运动"
+  }
+
+})
 </script>
 
 <template>
   <div class="gvb_weather">
     <!--骨架屏-->
-    <a-skeleton-line :rows="1" :widths="[600]" v-if="!isShow"></a-skeleton-line>
-    {{ data.province }} · {{ data.city }}· 今日 {{ data.weather }},{{ data.temperature }}°C，{{ weatherDesc }}
+    <a-skeleton-line :loading="true" :rows="1" :widths="[700]" v-if="!isShow"></a-skeleton-line>
+    <div v-if="isShow">
+      {{ data.province }} · {{ data.city }}· 今日 {{ data.weather }},{{ data.temperature }}°C，{{ weatherDesc }}
+    </div>
   </div>
 </template>
 

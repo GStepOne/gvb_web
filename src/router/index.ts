@@ -12,12 +12,36 @@ const router = createRouter({
             component: () => import("../views/web/index.vue"),
             children: [
                 {
-                    path: "",
+                    path: "index",
                     name: "index",
                     meta: {
                         title: "home"
                     },
                     component: () => import("../views/web/index.vue")
+                },
+                {
+                    path: "news",
+                    name: "news",
+                    meta: {
+                        title: "新闻"
+                    },
+                    component: () => import("../views/web/news.vue")
+                },
+                {
+                    path: "search",
+                    name: "search",
+                    meta: {
+                        title: "搜索"
+                    },
+                    component: () => import("../views/web/search.vue")
+                },
+                {
+                    path: "chat",
+                    name: "chat",
+                    meta: {
+                        title: "聊天室"
+                    },
+                    component: () => import("../views/web/chat.vue")
                 }
             ]
         },

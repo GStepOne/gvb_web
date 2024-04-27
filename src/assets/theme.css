@@ -6,6 +6,8 @@ body {
     --charts_color1: #59d9c2;
     --charts_color2: #7789e4;
     --sun_text: green;
+    --nav_text_color: black;
+    --container_width: 1450px;
 }
 
 body[arco-theme="dark"] {
@@ -14,4 +16,5 @@ body[arco-theme="dark"] {
     --charts_color1: #d97559;
     --charts_color2: #e4c477;
     --sun_text: green;
+    --container_width: 1450px;
 }

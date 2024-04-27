@@ -18,6 +18,27 @@
 </template>
 
 <style lang="scss">
+
+.gvb_user_info_menu {
+  margin-right: 30px;
+
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  .gvb_user_info_menu_drop {
+    display: flex;
+    align-items: center;
+
+    .gvb_user_info_menu_span {
+      margin: 0 5px;
+    }
+  }
+}
+
+
 .gvb_dropdown {
   .arco-dropdown-group-title {
     margin-top: 0;
@@ -64,7 +85,7 @@ function select(value: any) {
   if (val === "logout") {
     //调用退出接口
     store.logout()
-    router.push({ name: "index" })
+    router.push({name: "index"})
     return
   }
   return router.push({

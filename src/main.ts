@@ -8,9 +8,12 @@ import router from './router'
 import '@arco-design/web-vue/dist/arco.css'
 // 引入awesome
 import 'font-awesome/css/font-awesome.min.css'
+
 const app = createApp(App)
 app.use(ArcroVue)
 app.use(createPinia())
-app.use(router)
+app.use(router); //这里一定要加个分号
+
+(window as any).isLaptops = document.documentElement.clientWidth;
 
 app.mount('#app')

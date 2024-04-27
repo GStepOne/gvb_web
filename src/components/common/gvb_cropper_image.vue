@@ -261,22 +261,21 @@ defineExpose({
                 重新上传
               </div>
               <div>
-                <IconRefresh
-                    class="rotate_right"
-                    @click="changeScale(1)"
-                >
-                  <!--                  <CirclePlus/>-->
-                </IconRefresh>
-                <IconPlusCircle
+                <IconMinusCircle
                     class="rotate_right"
                     @click="changeScale(-1)"
                 >
+                </IconMinusCircle>
+                <IconPlusCircle
+                    class="rotate_right"
+                    @click="changeScale(1)"
+                >
                 </IconPlusCircle>
-                <IconMinusCircle
+                <IconRefresh
                     class="rotate_right"
                     @click="rotateRight"
                 >
-                </IconMinusCircle>
+                </IconRefresh>
               </div>
             </div>
           </div>
