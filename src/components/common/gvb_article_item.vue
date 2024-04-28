@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import type {articleUpdateType,articleDataType} from "@/api/article_api";
+import type {articleUpdateType, articleDataType} from "@/api/article_api";
 import {dateFormat} from "../../utils/date";
+
 interface Props {
   data: articleUpdateType & articleDataType
+  preview?: boolean
 }
 
 import {IconClockCircle} from "@arco-design/web-vue/es/icon";
@@ -11,7 +13,7 @@ const props = defineProps<Props>()
 </script>
 
 <template>
-  <div class="gvb_article_item">
+  <div :class="{gvb_article_item:true,preview:props.preview}">
     <!--封面图-->
     <div class="cover">
       <a-image :src="props.data.banner_url"></a-image>
@@ -60,13 +62,18 @@ const props = defineProps<Props>()
 
 <style lang="scss">
 .gvb_article_item {
-  padding: 20px;
+  //padding: 10px;
   display: flex;
-  width: 800px;
+  width: 100%;
+
   background-color: var(--color-fill-2);
   border-radius: 5px;
-  //transform: scale(0.9); //缩小一点 30% 就不会变乱了
-  transform-origin: left top;
+
+  &.preview {
+    //transform: scale(0.9); //缩小一点 30% 就不会变乱了
+    transform-origin: left top;
+    width: 800px;
+  }
 
   .cover {
     width: 30%;
@@ -119,10 +126,12 @@ const props = defineProps<Props>()
         margin-right: 10px;
       }
     }
-    .article_data{
-      >span{
+
+    .article_data {
+      > span {
         margin-right: 8px;
-        i{
+
+        i {
           margin-right: 3px;
         }
       }

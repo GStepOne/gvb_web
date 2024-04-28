@@ -23,13 +23,15 @@ const props = defineProps<Props>()
 
 <style lang="scss">
 .gvb_card {
-  //margin-top: 20px;
+  margin-top: 20px;
   background-color: var(--color-bg-1);
   border-radius: 5px;
   width: 100%;
+  padding: 10px;
+
   .head {
     //width: 100%;
-    height: 60px;
+    height: 40px;
     display: flex;
     align-items: center;
     padding: 10px;
@@ -51,7 +53,11 @@ const props = defineProps<Props>()
 
   .body {
     padding: 10px;
-    width: 100%;
+    min-height: 20px;
+    width: inherit;
+    //display: flex;
+    //align-items: center;
+    //justify-content: space-between;
   }
 }
 </style>

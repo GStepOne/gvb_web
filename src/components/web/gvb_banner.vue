@@ -5,6 +5,10 @@ import {reactive} from "vue";
 //打字机效果
 import vuetyped from "vue3typed/libs/typed/index.vue"
 
+import {useStore} from "@/stores";
+
+const store = useStore();
+
 const images = [
   'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
   'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp',
@@ -39,9 +43,9 @@ const strings = ["晓之意志、赤沙之蝎"]
 <template>
   <div class="gvb_banner">
     <div class="head">
-      <div class="slogan">Akatsuki Sasori</div>
+      <div class="slogan">{{store.siteInfo.slogan}}</div>
       <div class="abstract">
-        <vuetyped :strings="strings"
+        <vuetyped :strings="[store.siteInfo.slogan_en]"
                   :loop="true"
                   :start-delay="300"
                   :type-speed="100"

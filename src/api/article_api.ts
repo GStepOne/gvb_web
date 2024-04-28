@@ -30,7 +30,7 @@ export function articleListApi(params: paramsType): Promise<baseResponse<listDat
 
 //个人收藏的列表
 export function articleCollectsApi(params: paramsType): Promise<baseResponse<optionType[]>> {
-    return useAxios.get("/api/article/collects",{params})
+    return useAxios.get("/api/article/collects", {params})
 }
 
 
@@ -91,5 +91,14 @@ export function articleCreateApi(data: articleUpdateType): Promise<baseResponse<
 //获取文章内容
 export function articleDetailApi(id: string): Promise<baseResponse<articleUpdateType>> {
     return useAxios.get("/api/article/" + id.toString());
+}
+
+export interface articleCalendarType {
+    count: number,
+    date: string
+}
+
+export function articleCalendarApi() {
+    return useAxios.get("/api/article/calendar");
 }
 

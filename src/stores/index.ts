@@ -5,6 +5,7 @@ import {Message} from "@arco-design/web-vue";
 import {userInfoApi} from "@/api/user_api";
 import type {userInfoType} from "@/api/user_api";
 import type {Themes} from "md-editor-v3";
+import {siteInfoApi, type siteInfoType} from "@/api/settings_api";
 
 export interface userStoreUserInfoType {
     user_name: string
@@ -28,12 +29,33 @@ const userInfo: userStoreUserInfoType = {
     token: "",
     exp: 0,
 }
+
+const siteInfo: siteInfoType = {
+    addr: "上海浦东",
+    bei_an: "备案号:沪ICP备20008188号-1   ",
+    bilibili: "",
+    created_at: "2014-07-14",
+    email: "",
+    gitee_url: "",
+    github_url: "https://github.com/GStepOne",
+    job: "后端开发",
+    name: "Jack",
+    qq_image: "",
+    slogan: "Akatsuki Sasori",
+    slogan_en: "晓之意志 赤沙之蝎",
+    title: "Jack",
+    version: "1.0.0",
+    web: "",
+    wechat_image: "",
+}
+
 export const useStore = defineStore('counter', {
     state() {
         return {
             theme: theme,
             collapsed: collapsed, //后台侧边栏的搜索状态，默认展开
-            userInfo: userInfo
+            userInfo: userInfo,
+            siteInfo: siteInfo
         }
     },
     actions: {
@@ -115,7 +137,25 @@ export const useStore = defineStore('counter', {
         clearUserInfo() {
             this.userInfo = userInfo
             //清空localstorage里面
-            localStorage.setItem("userInfo","")
+            localStorage.setItem("userInfo", "")
+        },
+        async loadSiteInfo() {
+
+            const val = sessionStorage.getItem("siteInfo")
+            if (val !== null) {
+                try {
+                    navList.value = JSON.parse(val)
+                    return
+                } catch (e) {
+                    console.log(e)
+                }
+            }
+
+            let res = await siteInfoApi()
+            // Object.assign(siteInfo,res.data)
+            this.siteInfo = res.data
+            sessionStorage.setItem("siteInfo",JSON.stringify(res.data))
+
         }
     },
     getters: {

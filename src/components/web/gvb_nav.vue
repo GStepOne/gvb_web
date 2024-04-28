@@ -47,9 +47,8 @@ if (!noScroll) {
 
 function scroll() {
   //获取当前窗口的高度
-  console.log("|")
   let top = document.documentElement.scrollTop
-  isShow.value = (top >= 200)
+  isShow.value = top >= 200;
 }
 
 //组件销毁:跳转路由的时候 就会销毁

@@ -12,7 +12,7 @@ export interface promotionType {
 }
 
 //获取广告列表
-export function promotionListApi(params: paramsType): Promise<baseResponse<listDataType<any>>> {
+export function promotionListApi(params?: paramsType): Promise<baseResponse<listDataType<any>>> {
     //增加一个referer 头
     return useAxios.get("/api/advert", {
         params: params, headers: {

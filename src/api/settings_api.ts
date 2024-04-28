@@ -20,7 +20,7 @@ export interface siteInfoType {
     wechat_image: string
 }
 
-export function siteInfoApi(): Promise<baseResponse<listDataType<any>>> {
+export function siteInfoApi(): Promise<baseResponse<siteInfoType>> {
     return useAxios.get("/api/settings/site")
 }
 

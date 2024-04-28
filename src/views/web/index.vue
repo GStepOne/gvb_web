@@ -5,6 +5,12 @@ import Gvb_banner from "@/components/web/gvb_banner.vue";
 import Gvb_card from "@/components/common/gvb_card.vue";
 import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
 import Gvb_footer from "@/components/web/gvb_footer.vue";
+import Gvb_news from "@/components/web/gvb_news.vue";
+import Gvb_promotion from "@/components/web/gvb_promotion.vue";
+import Personal_introduction from "@/components/web/personal_introduction.vue";
+import Gvb_feed_back from "@/components/web/gvb_feed_back.vue";
+import Article_calendar from "@/components/charts/article_calendar.vue";
+import Gvb_article_list from "@/components/web/gvb_article_list.vue";
 </script>
 
 <template>
@@ -22,20 +28,30 @@ import Gvb_footer from "@/components/web/gvb_footer.vue";
                 <IconDoubleRight></IconDoubleRight>
               </router-link>
             </template>
+            <gvb_news></gvb_news>
           </gvb_card>
-          <gvb_card title="文章日历"></gvb_card>
-          <gvb_card title="文章列表">
+          <gvb_card title="文章日历">
+            <article_calendar></article_calendar>
+          </gvb_card>
+          <gvb_card title="文章列表" class="article_card">
             <template #head-right>
               <a-input-search placeholder="搜索文章标题"></a-input-search>
             </template>
+            <gvb_article_list></gvb_article_list>
           </gvb_card>
         </div>
         <!--右侧开始-->
         <div class="right">
-          <gvb_card title="独家推广"></gvb_card>
+          <gvb_card title="独家推广">
+            <gvb_promotion></gvb_promotion>
+          </gvb_card>
           <gvb_card title="标签云"></gvb_card>
-          <gvb_card title="个人名片"></gvb_card>
-          <gvb_card title="意见反馈"></gvb_card>
+          <gvb_card title="个人名片">
+            <personal_introduction></personal_introduction>
+          </gvb_card>
+          <gvb_card title="意见反馈">
+            <gvb_feed_back></gvb_feed_back>
+          </gvb_card>
         </div>
       </div>
     </main>
@@ -64,11 +80,33 @@ import Gvb_footer from "@/components/web/gvb_footer.vue";
       }
 
       > .left {
-        width: calc(100% - 400px);
+        width: calc(100% - 410px);
+
+        .article_card {
+          background: none;
+          //padding: 0;
+          //width: 100%;
+
+          .head {
+            background-color: var(--color-bg-1);
+          }
+
+        }
       }
 
       .gvb_card {
-        margin-bottom: 20px;
+        margin-bottom: 10px;
+        padding: 0;
+
+        &:first-child {
+          .body {
+            padding: 10px;
+          }
+        }
+
+        .body {
+          padding: 0;
+        }
       }
     }
 

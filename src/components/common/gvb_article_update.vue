@@ -227,8 +227,9 @@ const coverSrc = (data: any) => {
           </a-date-picker>
         </a-form-item>
 
-        <a-form-item label="预览" v-if="form.title && form.banner_url && form.category" content-class="preview_body">
-          <gvb_article_item :data="form"></gvb_article_item>
+        <a-form-item label="预览"
+                     v-if="form.title && form.banner_url && form.category" content-class="preview_body">
+          <gvb_article_item :data="form" preview></gvb_article_item>
         </a-form-item>
       </a-form>
     </a-modal>
