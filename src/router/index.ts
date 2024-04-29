@@ -9,10 +9,10 @@ const router = createRouter({
         {
             path: '/',
             name: 'web',
-            component: () => import("../views/web/index.vue"),
+            // component: () => import("../views/web/index.vue"),
             children: [
                 {
-                    path: "index",
+                    path: "/",
                     name: "index",
                     meta: {
                         title: "home"
@@ -42,6 +42,13 @@ const router = createRouter({
                         title: "聊天室"
                     },
                     component: () => import("../views/web/chat.vue")
+                }, {
+                    path: "article/:id",
+                    name: "article",
+                    meta: {
+                        title: "文章详情"
+                    },
+                    component: () => import("../views/web/article.vue")
                 }
             ]
         },
@@ -104,8 +111,8 @@ const router = createRouter({
                     ]
                 },
                 {
-                    path: "article",
-                    name: "article",
+                    path: "article_mgr",
+                    name: "article_mgr",
                     meta: {
                         title: "文章管理",
                         isAdmin: true,//只有管理员能看
@@ -282,19 +289,22 @@ router.beforeEach((to, from, next) => {
 
     if (meta.isLogin && !store.isLogin) {
         Message.warning("需要登录")
-        router.push({name: from.name as string})
+        // router.push({name: from.name as string})
+        next(false)
         return
     }
     //如果是普通用户
     if (store.isCommon && (meta.isAdmin || meta.isTourist)) {
         Message.warning("普通用户权限不足")
-        router.push({name: from.name as string})
+        // router.push({name: from.name as string})
+        next(false)
         return
     }
     //当前是游客，不是游客的就不能看
     if (store.isTourist && meta.isTourist === false) {
         Message.warning("游客权限不足")
-        router.push({name: from.name as string})
+        // router.push({name: from.name as string})
+        next(false)
         return
     }
     //判断目标地址的meta值

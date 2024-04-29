@@ -11,6 +11,14 @@ import Personal_introduction from "@/components/web/personal_introduction.vue";
 import Gvb_feed_back from "@/components/web/gvb_feed_back.vue";
 import Article_calendar from "@/components/charts/article_calendar.vue";
 import Gvb_article_list from "@/components/web/gvb_article_list.vue";
+import Web_tags from "@/components/web/web_tags.vue";
+
+const gvbArticleList = ref()
+const key = ref()
+
+function search() {
+  gvbArticleList.value.getData({key: key.value});
+}
 </script>
 
 <template>
@@ -35,9 +43,13 @@ import Gvb_article_list from "@/components/web/gvb_article_list.vue";
           </gvb_card>
           <gvb_card title="文章列表" class="article_card">
             <template #head-right>
-              <a-input-search placeholder="搜索文章标题"></a-input-search>
+              <a-input-search placeholder="搜索文章标题"
+                              @search="search"
+                              @keydown.enter="search"
+                              v-model="key"
+              ></a-input-search>
             </template>
-            <gvb_article_list></gvb_article_list>
+            <gvb_article_list ref="gvbArticleList"></gvb_article_list>
           </gvb_card>
         </div>
         <!--右侧开始-->
@@ -45,7 +57,9 @@ import Gvb_article_list from "@/components/web/gvb_article_list.vue";
           <gvb_card title="独家推广">
             <gvb_promotion></gvb_promotion>
           </gvb_card>
-          <gvb_card title="标签云"></gvb_card>
+          <gvb_card title="标签云">
+            <web_tags></web_tags>
+          </gvb_card>
           <gvb_card title="个人名片">
             <personal_introduction></personal_introduction>
           </gvb_card>
@@ -70,44 +84,50 @@ import Gvb_article_list from "@/components/web/gvb_article_list.vue";
     margin-top: 20px;
 
     .container {
-
       width: var(--container_width);
       justify-content: space-between; //两端对齐
       display: flex;
+      //margin-bottom: 10px;
 
       > .right {
         width: 380px;
       }
 
       > .left {
-        width: calc(100% - 410px);
+        width: calc(100% - 390px);
+        margin-right: 10px;
 
         .article_card {
           background: none;
-          //padding: 0;
-          //width: 100%;
+          //width: inherit;
+          margin-bottom: 10px;
+          padding: 0;
 
           .head {
             background-color: var(--color-bg-1);
           }
 
+          .body {
+            padding: 0;
+          }
         }
       }
 
       .gvb_card {
-        margin-bottom: 10px;
-        padding: 0;
-
-        &:first-child {
-          .body {
-            padding: 10px;
-          }
-        }
+        margin-bottom: 20px;
 
         .body {
-          padding: 0;
+          .gvb_news {
+            padding: 10px;
+          }
+
+          .gvb_article_item {
+            margin-bottom: 10px;
+          }
         }
       }
+
+
     }
 
   }

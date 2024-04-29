@@ -105,6 +105,7 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .gvb_nav {
+  top:0;
   z-index: 100;
   width: 100%;
   display: flex;
@@ -138,6 +139,7 @@ onUnmounted(() => {
     height: 50px;
     display: flex;
     align-items: center;
+
 
     .left {
       width: 70%;

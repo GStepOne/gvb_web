@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {Message} from "@arco-design/web-vue";
-import {reactive, ref} from "vue";
+import {onUnmounted, reactive, ref} from "vue";
 import type {listDataType, paramsType} from "@/api";
 import {type chatMessageType, chatRecordApi, chatRemoveApi, type chatType} from "@/api/chat_api";
 import {useStore} from "@/stores";
@@ -175,6 +175,13 @@ function SendImageEvent() {
 function SendFileEvent() {
   Message.warning("文件上传开发中")
 }
+
+onUnmounted(() => {
+  if (socket.value) {
+    //组件销毁时候就离开聊天室
+    socket.value?.close()
+  }
+})
 
 </script>
 

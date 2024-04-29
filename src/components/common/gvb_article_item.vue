@@ -20,7 +20,12 @@ const props = defineProps<Props>()
     </div>
 
     <div class="info">
-      <div class="title">{{ props.data.title }}</div>
+      <div class="title">
+        <template v-if="props.data.id === ''">
+          {{ props.data.title }}
+        </template>
+        <router-link v-else :to="{name: 'article',params:{id:props.data.id}}" v-html="props.data.title"></router-link>
+      </div>
       <div class="abstract">
         <!--文本的截断和省略-->
         <a-typography-paragraph :ellipsis="{rows:2,showTooltip:true,css:true}">
@@ -62,10 +67,9 @@ const props = defineProps<Props>()
 
 <style lang="scss">
 .gvb_article_item {
-  //padding: 10px;
+  padding: 10px;
   display: flex;
   width: 100%;
-
   background-color: var(--color-fill-2);
   border-radius: 5px;
 
@@ -107,6 +111,17 @@ const props = defineProps<Props>()
     .title {
       font-weight: 400;
       font-size: 16px;
+
+      a {
+        color: var(--color-text-1);
+        text-decoration: none;
+      }
+
+      em {
+        color: #d71345;
+        margin-right: 2px;
+
+      }
     }
 
     .abstract {

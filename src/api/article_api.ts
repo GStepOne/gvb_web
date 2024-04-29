@@ -24,8 +24,14 @@ export interface articleType {
     user_nick_name: string
 }
 
-export function articleListApi(params: paramsType): Promise<baseResponse<listDataType<articleType[]>>> {
-    return useAxios.get("/api/article", {params})
+export interface articleParamsType extends paramsType {
+    date?: string
+    tag?: string
+    category?: string
+}
+
+export function articleListApi(params: articleParamsType): Promise<baseResponse<listDataType<articleType[]>>> {
+    return useAxios.get("/api/article", {params: params})
 }
 
 //个人收藏的列表
