@@ -11,3 +11,9 @@ const store = useStore();
 store.loadTheme()
 store.loadToken()
 </script>
+
+<style lang="scss">
+#nprogress .bar {
+  background: #be1b1b;
+}
+</style>

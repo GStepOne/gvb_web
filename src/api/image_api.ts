@@ -26,11 +26,6 @@ export interface imageType {
     id: number
 }
 
-// export function imageListApi(params?: paramsType): Promise<baseResponse<listDataType<imageType[]>>> {
-//     return useAxios.get("/api/images", {params: params})
-// }
-
-
 export const imageListApi: (params?: paramsType) => Promise<baseResponse<listDataType<imageType[]>>> = cacheRequest((params?: paramsType) => useAxios.get("/api/images", {params}))
 
 

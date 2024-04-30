@@ -1,30 +1,30 @@
 <template>
-  <a-form class="gvb_login_form" ref="formRef" :model="form" :label-col-props="{span:0}" :wrapper-col-props="{span:24}">
+  <Form class="gvb_login_form" ref="formRef" :model="form" :label-col-props="{span:0}" :wrapper-col-props="{span:24}">
     <div class="title">用户登录</div>
     <!--用户名-->
-    <a-form-item field="user_name" label="用户名"
+    <FormItem field="user_name" label="用户名"
                  :rules="[{required:true,message:'请输入用户名'}]"
                  :validate-trigger="['blur']"
     >
-      <a-input v-model="form.user_name" placeholder="用户名">
+      <Input v-model="form.user_name" placeholder="用户名">
         <template #prefix>
           <icon-user/>
         </template>
-      </a-input>
-    </a-form-item>
+      </Input>
+    </FormItem>
     <!--密码框-->
-    <a-form-item field="password" label="密码"
+    <FormItem field="password" label="密码"
                  :rules="[{required:true,message:'请输入密码'}]"
                  :validate-trigger="['blur']"
     >
-      <a-input type="password" v-model="form.password" placeholder="密码">
+      <Input type="password" v-model="form.password" placeholder="密码">
         <template #prefix>
           <icon-lock/>
         </template>
-      </a-input>
-    </a-form-item>
+      </Input>
+    </FormItem>
 
-    <a-button type="primary" @click="loginEmail">登录</a-button>
+    <Button type="primary" @click="loginEmail">登录</Button>
 
     <div class="other-login">
       <div class="label">第三方登录</div>
@@ -34,7 +34,7 @@
         </a>
       </div>
     </div>
-  </a-form>
+  </Form>
 </template>
 
 <style lang="scss">
@@ -112,9 +112,10 @@ import type {loginEmailType} from "@/api/user_api";
 import {Message} from "@arco-design/web-vue";
 import {useStore} from "@/stores";
 import {useRoute} from "vue-router";
+import { Form,FormItem,Input,Button } from "@arco-design/web-vue";
 
 const emits = defineEmits(["ok"])
-const route = useRoute()
+// const route = useRoute()
 //因为是模态窗 不会销毁组件
 const store = useStore()
 
@@ -174,7 +175,7 @@ async function qqLogin() {
   }
 
   //如果props的qq跳转路径不变化
-  let path = route.path
+  let path = location.pathname
   console.log("当前path",path)
   if (props.qqRedirectPath) {
       path = props.qqRedirectPath

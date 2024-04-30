@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {menuDetailApi} from "@/api/menu_api";
 import type {menuType} from "@/api/menu_api";
-import {reactive} from "vue";
+import {reactive, watch} from "vue";
 //打字机效果
 import vuetyped from "vue3typed/libs/typed/index.vue"
 
@@ -15,43 +15,92 @@ const images = [
   'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/0265a04fddbd77a19602a15d9d55d797.png~tplv-uwbnlip3yd-webp.webp',
 ];
 
-const data = reactive<menuType>({})
+const data = reactive<BannerType>({
+  abstract: [],
+  banner_time: 7,
+  banners: [],
+  slogan: "",
+})
+
+interface BannerType {
+  abstract: string | string[]
+  banner_time?: number
+  banners: string | BannerType[]
+  slogan: string
+}
+
+interface Props {
+  data?: BannerType
+}
+
+const props = defineProps<Props>()
 
 // async function getData() {
 //
-// const key = `bannerList__${location.pathname}`
-//   // const val = sessionStorage.getItem(key)
-//   // if (val !== null) {
-//   //   try {
-//   //     Object.assign(data, JSON.parse(val))
-//   //     return
-//   //   } catch (e) {
-//   //     console.log(e)
-//   //   }
-//   // }
+//   if (props.data) {
+//     if (typeof props.data.banners === 'string') {
+//       data.banners = [{path: props.data.banners}]
+//     }
+//     data.abstract = props.data.abstract
+//     data.banner_time = props.data.banner_time
+//     data.slogan = props.data.slogan
+//     // Object.assign(data, props.data)
+//     return
+//   }
+//
+//   const key = `bannerList__${location.pathname}`
+//   const val = sessionStorage.getItem(key)
+//   let jsonData = JSON.parse(val)
+//   if (val !== null) {
+//     try {
+//       Object.assign(data,)
+//       data.banners = jsonData.banners
+//       data.abstract = jsonData.abstract
+//       data.banner_time = jsonData.banner_time
+//       data.slogan = jsonData.slogan
+//       return
+//     } catch (e) {
+//       console.log(e)
+//     }
+//   }
 //
 //   let res = await menuDetailApi(location.pathname)
 //   Object.assign(data, res.data)
+//   data.banners = res.data.banners
+//   data.abstract = res.data.abstract
+//   data.banner_time = res.data.banner_time
+//   data.slogan = res.data.slogan
 //   console.log(data)
-// sessionStorage.setItem(key,JSON.stringify(data))
+//   sessionStorage.setItem(key, JSON.stringify(data))
 // }
-//
+
 // getData();
-const strings = ["晓之意志、赤沙之蝎"]
+
+// watch(() => props.data, () => {
+//   getData()
+// }, {immediate: true})
+
 </script>
 
 <template>
   <div class="gvb_banner">
     <div class="head">
-      <div class="slogan">{{store.siteInfo.slogan}}</div>
+      <div class="slogan">{{ store.siteInfo.slogan }}</div>
       <div class="abstract">
-        <vuetyped :strings="[store.siteInfo.slogan_en]"
-                  :loop="true"
-                  :start-delay="300"
-                  :type-speed="100"
-                  :back-speed="50">
-          <span class="typing"></span>
-        </vuetyped>
+        <!--        v-if="typeof data.abstract ==='object'" 写完接口换一下这个 TODO-->
+        <template v-if="0">
+          <vuetyped :strings="[store.siteInfo.slogan_en]"
+                    :loop="true"
+                    :start-delay="300"
+                    :type-speed="100"
+                    :back-speed="50">
+            <span class="typing"></span>
+          </vuetyped>
+        </template>
+        <template v-else>
+          <!--          {{ data.abstract }}-->
+          木兰当户织
+        </template>
       </div>
 
       <!--      <div class="slogan">{{ data.slogan }}</div>-->

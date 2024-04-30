@@ -7,7 +7,7 @@ import {useStore} from "@/stores";
 
 const store = useStore();
 
-const data = reactive<{ dateList: string[], countList: Array<Array<number>> }>({
+const data = reactive<{ dateList: string[], countList: Array<string,number> }>({
   dateList: [],
   countList: [],
 })
@@ -38,13 +38,11 @@ watch(() => store.theme, () => {
 
 <template>
   <div class="article_calendar">
-
     <article_calendar_charts v-if="isShow"
                              :date-list="data.dateList"
                              :count-list="data.countList"
                              :theme="store.theme"
     ></article_calendar_charts>
-
   </div>
 </template>
 

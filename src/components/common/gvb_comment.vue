@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {reactive, watch} from "vue";
+import {reactive, ref, watch} from "vue";
 import {useStore} from "@/stores";
 import {Message} from "@arco-design/web-vue";
 import {
@@ -35,7 +35,6 @@ watch(() => props.articleId, () => {
     getData()
   }
 }, {immediate: true})
-
 
 
 const params = reactive<paramsType>()
@@ -83,12 +82,24 @@ async function createComment() {
   getData()
 }
 
+//把子组件的事件往上抛,让父组件可以调用
+const textareaRef = ref()
+
+function focus() {
+  textareaRef.value.focus()
+}
+
+defineExpose({
+  focus
+})
+
 </script>
 
 <template>
   <div class="gvb_comment_components">
     <div class="add_comment">
-      <a-textarea placeholder="请输入高见"
+      <a-textarea placeholder="良言一句三冬暖，恶语伤人六月寒"
+                  ref="textareaRef"
                   @keydown.enter.ctrl="createComment"
                   v-model="addCommentForm.content"
                   :auto-size="{minRows:6, maxRows:6}"

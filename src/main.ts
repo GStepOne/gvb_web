@@ -8,7 +8,7 @@ import router from './router'
 import '@arco-design/web-vue/dist/arco.css'
 // 引入awesome
 import 'font-awesome/css/font-awesome.min.css'
-
+import "nprogress/nprogress.css"
 const app = createApp(App)
 app.use(ArcroVue)
 app.use(createPinia())

@@ -54,6 +54,7 @@ import gvb_table, {
   type RecordType
 } from "@/components/common/gvb_table.vue";
 import Gvb_message_record_modal from "@/components/common/gvb_message_record_modal.vue";
+import {showMessageRecord} from "@/components/common/gvb_message_record";
 
 const columns = [
   {title: '昵称', dataIndex: 'nick_name'},
@@ -77,8 +78,10 @@ const messageVisible = ref(false)
 const userId = ref(0)
 
 function checkMessage(record: userInfoType) {
-  messageVisible.value = true
-  userId.value = record.id
+  // messageVisible.value = true
+  // userId.value = record.id
+
+  showMessageRecord(record.id, record.nick_name)
 }
 
 //编辑用户

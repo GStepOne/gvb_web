@@ -125,6 +125,7 @@ const props = defineProps<Props>()
     }
 
     .abstract {
+      margin-top: 2px;
       .arco-typography {
         margin-bottom: 0;
       }
@@ -132,6 +133,7 @@ const props = defineProps<Props>()
 
     .data {
       margin-top: 5px;
+      margin-bottom: 5px;
 
       .category {
         margin-right: 10px;

@@ -3,6 +3,7 @@ import * as echarts from "echarts";//* 代表引入所有
 import type {EChartsOption} from "echarts";
 import {onMounted, ref} from "vue";
 import router from "@/router";
+import type {TopLevelFormatterParams} from "echarts/types/dist/shared";
 
 interface Props {
   dateList: string[]
@@ -67,10 +68,10 @@ onMounted(() => {
       backgroundColor: "#555",
       borderColor: "#777",
       borderWidth: 1,
-      formatter: function (e) {
-        e = e.value;
+      formatter: function (e:any) {
+        const v = e.value;
         return '<div style="font-size:14px;color:white">'
-            + e[0] + ":" + e[1] + "</div>"
+            + v[0] + ":" + v[1] + "</div>"
       }
     },
     visualMap: {

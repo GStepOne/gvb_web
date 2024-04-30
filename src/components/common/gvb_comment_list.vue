@@ -13,6 +13,7 @@ import {Message} from "@arco-design/web-vue";
 import {nextTick, reactive, ref} from "vue";
 import type {paramsType} from "@/api";
 import {useStore} from "@/stores";
+import {showMessageRecord} from "@/components/common/gvb_message_record";
 
 interface Props {
   data: commentType[]
@@ -101,6 +102,14 @@ async function commentDigg(record: commentType) {
   record.digg_count++
 }
 
+function avatarClick(item: commentType) {
+  if (store.userInfo.userId === item.user_id) {
+    console.log('不能与自己聊天')
+    return
+  }
+  showMessageRecord(item.user_id, item.user.nick_name)
+}
+
 </script>
 
 <template>
@@ -109,7 +118,6 @@ async function commentDigg(record: commentType) {
         v-for="item in data"
         :content="item.content"
         :author="item.user.nick_name"
-        :avatar="item.user.avatar"
         :datetime="relativeCurrentTime(item.created_at)"
     >
       <!--回复信息-->
@@ -117,12 +125,18 @@ async function commentDigg(record: commentType) {
         <span class="action" @click="commentDigg(item)"><IconThumbUp/>点赞({{ item.digg_count }})</span>
         <span class="action" @click="applyShow(item)"><IconMessage/>回复</span>
         <a-popconfirm
-            v-if="store.isAdmin || store.userInfo.userId === item.user_id"
+            v-if="store.isAdmin || store.userInfo.userId === parseInt(item.user_id)"
             content="是否删除这条评论?"
             @ok="deleteComment(item)">
           <span class="action"><IconDelete/>删除</span>
         </a-popconfirm>
       </template>
+      <template #avatar>
+        <a-avatar @click="avatarClick(item)">
+          <img :src="item.user.avatar" alt="">
+        </a-avatar>
+      </template>
+
       <a-comment
           :avatar="store.userInfo.avatar"
           :author="store.userInfo.nick_name"
@@ -133,7 +147,7 @@ async function commentDigg(record: commentType) {
             <a-input :class="'comment_apply_ipt_'+item.id" @keydown.enter.ctrl="applyComment(item)"
                      :placeholder="'回复'+item.user.nick_name"
                      v-model="item.applyContent"
-                     @click="applyShow(sub)"></a-input>
+                     @click="applyShow(item)"></a-input>
             <a-button type="primary" style="margin-left: 10px" @click="applyComment(item)">回复</a-button>
           </div>
         </template>

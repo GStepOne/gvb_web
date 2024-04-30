@@ -87,24 +87,21 @@ export function defaultOptionApi(url: string, params?: paramsType): Promise<base
 }
 
 //防止短时间内的重复请求
-export function cacheRequest<T>(func: () => Promise<T>): () => Promise<T> {
-    let lastRequestTime: number = 0;//上次请求的时间
-    let cacheData: T | null = null;//上次请求缓存的数据
+export function cacheRequest<T, P>(func: (params?: P) => Promise<T>): (params?: P) => Promise<T> {
+    let lastRequestTime: number = 0;
+    let cacheData: T | null = null;
     let currentRequest: Promise<T> | null = null;
 
-    return function () {
+    return function (params?: P) {
         const currentTime = Date.now();
         const timeDiff = currentTime - lastRequestTime
         if (timeDiff < 1000 && cacheData) {
             return Promise.resolve(cacheData);
         }
-        //没有缓存数据，或者时间超过一秒，那就发起新的请求
         if (!currentRequest) {
-            currentRequest = func().then((res: T) => {
-                //更新之前的数据和时间
+            currentRequest = func(params).then((res: T) => {
                 lastRequestTime = currentTime
                 cacheData = res
-                //重置当前请求
                 currentRequest = null
                 return res
             })

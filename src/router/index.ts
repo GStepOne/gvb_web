@@ -282,6 +282,7 @@ const router = createRouter({
 
 export default router
 
+import NProgress from "nprogress";
 
 router.beforeEach((to, from, next) => {
     const store = useStore()
@@ -307,6 +308,14 @@ router.beforeEach((to, from, next) => {
         next(false)
         return
     }
+
+    NProgress.start()
     //判断目标地址的meta值
     next()
+
+})
+
+
+router.afterEach(() => {
+    NProgress.done() //完成进度条
 })

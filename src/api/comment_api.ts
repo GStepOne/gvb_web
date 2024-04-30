@@ -28,7 +28,7 @@ export interface commentType {
     id: number,
     parent_comment_id: number | null, //父评论
     user: commentUserType,
-    user_id: string,
+    user_id: number,
     sub_comments: commentType[],
     applyContent: string, //人为加上的
     isApply: boolean //是否显示回复那个组件

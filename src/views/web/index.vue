@@ -29,15 +29,15 @@ function search() {
       <div class="container">
         <!--左侧开始-->
         <div class="left">
-          <gvb_card title="今日热搜">
-            <template #head-right>
-              <router-link :to="{name:'news'}">
-                更多
-                <IconDoubleRight></IconDoubleRight>
-              </router-link>
-            </template>
-            <gvb_news></gvb_news>
-          </gvb_card>
+<!--          <gvb_card title="今日热搜">-->
+<!--            <template #head-right>-->
+<!--              <router-link :to="{name:'news'}">-->
+<!--                更多-->
+<!--                <IconDoubleRight></IconDoubleRight>-->
+<!--              </router-link>-->
+<!--            </template>-->
+<!--            <gvb_news></gvb_news>-->
+<!--          </gvb_card>-->
           <gvb_card title="文章日历">
             <article_calendar></article_calendar>
           </gvb_card>

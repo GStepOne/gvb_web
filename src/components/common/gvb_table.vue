@@ -12,7 +12,7 @@
         >
         </a-select>
         <a-popconfirm content="是否确认执行此操作?" v-if="!props.noConfirm" @ok="actionMethod">
-          <a-button status="danger" type="primary"  v-if="actionValue !== undefined && actionValue!==''">执行</a-button>
+          <a-button status="danger" type="primary" v-if="actionValue !== undefined && actionValue!==''">执行</a-button>
         </a-popconfirm>
         <a-button v-else type="primary" status="danger" v-if="actionValue !== undefined && actionValue!==''"
                   @click="actionMethod">执行
@@ -20,7 +20,7 @@
       </div>
       <div class="action_search">
         <a-input-search
-            :placeholder="props.searchPlaceholder"
+            :placeholder="searchPlaceholder"
             v-model="params.key"
             @keydown.enter="search"
             @search="search">
@@ -57,7 +57,6 @@
               v-model:selectedKeys="selectedKeys"
               :pagination="false"
           >
-            <!--         -->
             <!--一定要再包一层 不然会报错  record 是从父组件传递的-->
             <template #columns>
               <!--有render 走render-->
@@ -103,13 +102,14 @@
         <div class="gvb_table_page" v-if="!noPage">
           <a-pagination
               :total="data.count"
-              @change="pageChange()"
+              @change="pageChange"
               v-model:current="params.page"
               :default-page-size="params.limit"
               show-total
               show-jumper
           >
           </a-pagination>
+
         </div>
       </div>
     </a-spin>
@@ -122,8 +122,8 @@ import {IconRefresh} from "@arco-design/web-vue/es/icon";
 import {type Component, reactive, ref} from "vue"
 import {type baseResponse, defaultOptionApi, type listDataType, type paramsType} from "@/api";
 import {defaultDeleteApi, type optionType} from "@/api/index";
-import {Message, type TableColumnData, type TableData, type TableRowSelection} from "@arco-design/web-vue";
-import {dateTimeFormat} from "../../utils/date";
+import {Message, type TableColumnData, type TableRowSelection} from "@arco-design/web-vue";
+import {dateTimeFormat} from "@/utils/date";
 
 //定义一些属性 由父组件传递过来
 interface Props {
@@ -146,7 +146,6 @@ interface Props {
   searchPlaceholder?: string //搜索模糊匹配的提示词
   defaultParams?: paramsType & any //默认第一次查询的参数
   noPage?: boolean //不要分页
-
 }
 
 const props = defineProps<Props>()
@@ -162,8 +161,6 @@ const params = reactive<paramsType>({
   limit: limit,
   key: "",
 })
-
-
 const isLoading = ref(false)
 
 async function getList(p?: paramsType & any) {
@@ -171,6 +168,8 @@ async function getList(p?: paramsType & any) {
     //把p的值赋值给params
     Object.assign(params, p)
   }
+
+  console.log('get_list',params)
   isLoading.value = true
   let res = await props.url(params)
   if (res.code) {
@@ -186,13 +185,13 @@ async function getList(p?: paramsType & any) {
 //立马执行
 getList(props.defaultParams)
 
-
 defineExpose({
   getList
 })
 
 function pageChange() {
-  getList()
+  console.log(params)
+  getList(params)
 }
 
 //搜索
@@ -259,8 +258,6 @@ function actionMethod() {
       Message.warning("请选择要删除的记录")
       return
     }
-
-
     removeIdData(selectedKeys.value)
     return
   }
@@ -297,6 +294,7 @@ async function remove(record: RecordType<any>) {
 async function removeIdData(idList: (number | string)[]) {
   //代理是从api开始的所以url 要以api开头
   if (props.deleteUrl && props.defaultDelete) {
+    console.log("idList",idList)
     let res = await defaultDeleteApi(props.deleteUrl, idList)
     if (res.code) {
       Message.error(res.msg)
@@ -310,6 +308,7 @@ async function removeIdData(idList: (number | string)[]) {
     return
   }
   Message.error("尚未配置删除链接")
+  return
 }
 
 //过滤

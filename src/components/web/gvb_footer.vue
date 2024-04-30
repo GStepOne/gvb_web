@@ -63,6 +63,7 @@ getData()
         </div>
       </div>
       <div class="right">
+        <span>社交媒体</span>
         <a href="javascript:void (9)" target="_blank">
           <img src="/public/image/icon/bilibili.png" alt="bilibili">
         </a>
@@ -132,7 +133,7 @@ getData()
         }
 
         .site_running_date {
-          min-width: 200px;
+          min-width: 220px;
         }
       }
 
@@ -153,6 +154,10 @@ getData()
       display: flex;
       align-items: center;
       justify-content: center;
+
+      span{
+        padding: 10px;
+      }
 
       img {
         width: 40px;

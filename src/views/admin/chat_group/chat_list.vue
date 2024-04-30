@@ -23,7 +23,6 @@ const config = reactive<chatGroupConfigType>({
   is_send_image: false,
   is_paste: false,
   is_send_file: false,
-  is_paste: false,
   is_markdown: false,
   content_length: 100,
 })

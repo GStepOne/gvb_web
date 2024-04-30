@@ -8,6 +8,9 @@ body {
     --sun_text: green;
     --nav_text_color: black;
     --container_width: 1450px;
+    --md-bk-color: white;
+
+    --hightColor: #d71345;
 }
 
 body[arco-theme="dark"] {
@@ -17,4 +20,5 @@ body[arco-theme="dark"] {
     --charts_color2: #e4c477;
     --sun_text: green;
     --container_width: 1450px;
+    --md-bk-color: black;
 }

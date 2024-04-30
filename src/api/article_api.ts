@@ -2,6 +2,11 @@ import {type baseResponse, type paramsType, useAxios, type optionType, type list
 import type {imageIdType} from "@/api/image_api";
 import {cacheRequest} from "@/api/index"
 
+interface articleItem {
+    id: string
+    title: string
+}
+
 export interface articleType {
     abstract: string,
     banner_id: number,
@@ -20,8 +25,12 @@ export interface articleType {
     title: string,
     updated_at: string,
     user_avatar: string,
-    user_id: number,
+    user_id: string,
     user_nick_name: string
+    is_collect?: boolean,
+    is_digg?: boolean,
+    next?: articleItem,
+    prev?: articleItem,
 }
 
 export interface articleParamsType extends paramsType {
@@ -108,3 +117,26 @@ export function articleCalendarApi() {
     return useAxios.get("/api/article/calendar");
 }
 
+export function articleDetailWebApi(id: string): Promise<baseResponse<articleType>> {
+    return useAxios.get("/api/article/" + id.toString());
+}
+
+export function articleCollectsPostApi(id: string): Promise<baseResponse<string>> {
+    return useAxios.post("/api/article/collects", {id: id});
+}
+
+export function articleDiggPostApi(id: string): Promise<baseResponse<string>> {
+    return useAxios.post("/api/digg", {id: id});
+}
+
+export interface articleSearchType {
+    body: string
+    id: string
+    key: string
+    slug: string
+    title: string
+}
+
+export function articleSearchApi(params: paramsType): Promise<baseResponse<listDataType<articleSearchType>>> {
+    return useAxios.get("/api/article/fulltext", {params});
+}

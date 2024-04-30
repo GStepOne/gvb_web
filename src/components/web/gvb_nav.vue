@@ -5,6 +5,7 @@ import {useStore} from "@/stores";
 import Gvb_user_info_menu from "@/components/common/gvb_user_info_menu.vue";
 import {menuNameListApi, type menuNameType} from "@/api/menu_api";
 import {onUnmounted, ref} from "vue";
+import Gvb_search from "@/components/web/gvb_search.vue";
 
 const store = useStore()
 //防止闪烁 有默认数据|缓存
@@ -43,6 +44,7 @@ if (!noScroll) {
 //给当前窗口增加滚动条事件
   isShow.value = false
   window.addEventListener("scroll", scroll)
+  scroll()
 }
 
 function scroll() {
@@ -81,9 +83,7 @@ onUnmounted(() => {
           <!--          <router-link >官方文档</router-link>-->
 
         </div>
-        <div class="search">
-          <IconSearch></IconSearch>
-        </div>
+          <gvb_search></gvb_search>
       </div>
       <div class="right">
         <div class="login" v-if="!store.isLogin">
@@ -167,7 +167,7 @@ onUnmounted(() => {
         }
       }
 
-      .search {
+      .gvb_search {
         svg {
           cursor: pointer;
         }
