@@ -23,7 +23,7 @@ export default defineConfig(({mode}) => {
         server: {
             //局域网 这里访问localhost:81 访问的是前端地址
             host: "0.0.0.0",
-            port: 81,
+            port: 8081,
             proxy: {
                 //从/api开始代理
                 "/api": {
