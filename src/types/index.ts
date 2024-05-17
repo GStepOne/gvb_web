@@ -6,5 +6,5 @@ export interface tabType {
 
 export interface optionType {
     label: string
-    value: string | number
+    value?: string | number
 }

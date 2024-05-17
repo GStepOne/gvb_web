@@ -10,11 +10,6 @@ export interface imageIdType {
     image_type: "本地" | "七牛云"
 }
 
-//获取图片的链接
-// export function imageIdListApi(): Promise<baseResponse<imageIdType[]>> {
-//     return useAxios.get("/api/image")
-// }
-
 export const imageIdListApi: () => Promise<baseResponse<imageIdType[]>> = cacheRequest(() => useAxios.get("/api/image"))
 
 export interface imageType {
@@ -35,20 +30,6 @@ export interface imagesUploadResponse {
     msg: string
 }
 
-
-// export function uploadImageApi(file: File): Promise<baseResponse<string>> {
-//     return new Promise((resolve, reject) => {
-//         const form = new FormData()
-//         form.set("image", file)
-//         useAxios.post("/api/image", form, {
-//             headers: {
-//                 "Content-Type": "multipart/form-data",
-//             }
-//         }).then((res:any) => resolve(res)).catch(err => reject(err))
-//     })
-//     // return useAxios.post("/api/image", {"image": file})
-// }
-
 export function uploadImageApi(file: File): Promise<baseResponse<string>> {
     return new Promise((resolve, reject) => {
         const form = new FormData()
@@ -58,6 +39,7 @@ export function uploadImageApi(file: File): Promise<baseResponse<string>> {
                 "Content-Type": "multipart/form-data",
             }
         }).then((res: any) => {
+            console.log("后端返回的",res)
             resolve(res);
         }).catch(err => {
             reject(err);

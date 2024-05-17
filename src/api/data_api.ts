@@ -6,13 +6,13 @@ export interface LoginDataType {
     sign_list: [],
 }
 
-interface loginDataRequest {
+export interface loginDataRequest {
     data: number
 }
 
 
-export function dataLoginApi(parasm: loginDataRequest): Promise<baseResponse<LoginDataType>> {
-    return useAxios.get("/api/data_seven", parasm)
+export function dataLoginApi(params: loginDataRequest): Promise<baseResponse<LoginDataType>> {
+    return useAxios.get("/api/data_seven", params)
 }
 
 

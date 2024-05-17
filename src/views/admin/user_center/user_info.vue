@@ -54,6 +54,8 @@ async function userInfoUpdate() {
     sign: form.sign,
     avatar: form.avatar,
   }
+
+  console.log("user_info",data)
   let res = await userInfoUpdateApi(data)
   if (res.code) {
     Message.error(res.msg)
@@ -108,9 +110,11 @@ const browserUpload = (): void => {
 
 /* 保存logo自定义事件, 实际业务在此编写 */
 function onConfirm(val: any) {
-  // console.log(val, '点击保存按钮后的图片信息')
+  console.log("接收到confirm",val)
+  console.log(val, '点击保存按钮后的图片信息')
+
   //调取头像更新的接口
-  form.avatar = val
+  form.avatar = "/"+val
   userInfoUpdate()
 }
 
@@ -153,7 +157,7 @@ const bindEmailVisible = ref(false)
         </a-form-item>
 
         <a-form-item label="我的博客">
-          <a-input @change="userInfoUpdate" v-model="form.link" placeholder="我的博客"></a-input>
+          <a-input @change="userInfoUpdate" v-model="form.link" placeholder="请以http或者https开头"></a-input>
         </a-form-item>
 
         <a-form-item label="邮箱">
@@ -189,10 +193,10 @@ const bindEmailVisible = ref(false)
               nickname:form.nick_name,
               sign:form.sign,
               link:form.link,
-              // collects_count:form.collects_count,
-              // digg_count:form.digg_count,
-              // comment_count:form.comment_count,
-              // look_count:form.look_count,
+              collects_count:0,
+              digg_count:0,
+              comment_count:0,
+              look_count:0,
             }"
         ></gvb_user_info_preview>
       </div>

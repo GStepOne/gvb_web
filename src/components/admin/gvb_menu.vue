@@ -92,7 +92,8 @@ const menuList: MenuType[] = [
       {key: "6-1", title: "菜单列表", name: "menu_list", child: []},
       {key: "6-2", title: "广告列表", name: "promotion_list", child: []},
       {key: "6-3", title: "系统日志", name: "log_list", child: []},
-      {key: "6-4", title: "系统配置", name: "system_settings", child: []},
+      {key: "6-4", title: "轮播图列表", name: "carousel_list", child: []},
+      {key: "6-5", title: "系统配置", name: "system_settings", child: []},
     ]
   }
 ]

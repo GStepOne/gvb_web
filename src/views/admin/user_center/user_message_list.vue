@@ -29,10 +29,10 @@ const sendUserId = ref<number>(0)
 //2 获取当前登陆者消息记录
 async function messageUserCheck(data: messageType) {
   //当前的收信人
-  revUserId.value = parseInt(data.user_id)
+  revUserId.value = data.user_id
   revNickname.value = data.nickname
 
-  userId.value = parseInt(data.user_id)
+  userId.value = data.user_id
   sendUserId.value = store.userInfo.userId
 }
 </script>

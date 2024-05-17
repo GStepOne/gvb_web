@@ -84,10 +84,6 @@
       <template #title="{record}:{record:articleType}">
         <div class="article_title_col" v-html="record.title"></div>
       </template>
-
-<!--      <template #action_middle="{record}:{record:articleType}">-->
-<!--        <a-button type="outline" @click="editArticleContent(record)">编辑正文</a-button>-->
-<!--      </template>-->
     </gvb_table>
   </div>
 </template>

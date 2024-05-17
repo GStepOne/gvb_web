@@ -54,7 +54,7 @@ const data = reactive<articleType>({
   title: "",
   updated_at: "",
   user_avatar: "",
-  user_id: "",
+  user_id: 0,
   user_nick_name: ""
 })
 
@@ -183,7 +183,7 @@ onMounted(() => {
     <gvb_nav></gvb_nav>
     <gvb_banner :data="{
       abstract:data.abstract,
-      banners:data.banner_url,
+      banners: data.banner_url,
       slogan:data.title
     }"></gvb_banner>
 
@@ -206,21 +206,19 @@ onMounted(() => {
             <MdPreview :editor-id="mdId" v-model="data.content" :theme="store.themeString"></MdPreview>
           </article>
           <div class="next_prev">
-            <div class="prev">
-              上一篇
-              <template v-if="data.prev">
-                <a :href="`/article/${data.prev.id}`">{{ data.prev?.title }}</a>
-              </template>
-              <template v-else>当前是第一篇</template>
-            </div>
-
-            <div class="next">
-
-              <template v-if="data.next">
-                <a :href="`/article/${data.next.id}`">{{ data.next?.title }}</a>
-              </template>
-              <template v-else>当前是最后一篇</template>
-            </div>
+<!--            <div class="prev">-->
+<!--              上一篇-->
+<!--              <template v-if="data.prev">-->
+<!--                <a :href="`/article/${data.prev.id}`">{{ data.prev?.title }}</a>-->
+<!--              </template>-->
+<!--              <template v-else>当前是第一篇</template>-->
+<!--            </div>-->
+<!--            <div class="next">-->
+<!--              <template v-if="data.next">-->
+<!--                <a :href="`/article/${data.next.id}`">{{ data.next?.title }}</a>-->
+<!--              </template>-->
+<!--              <template v-else>当前是最后一篇</template>-->
+<!--            </div>-->
           </div>
           <gvb_comment :article-id="id"
                        ref="gvbCommentRef"

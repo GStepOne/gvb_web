@@ -1,0 +1,1 @@
+.gvb_card{margin-top:10px;background-color:var(--color-bg-1);border-radius:5px;padding:10px}.gvb_card .head{height:40px;display:flex;align-items:center;padding:10px;border-bottom:1px solid var(--bg);justify-content:space-between}.gvb_card .head .title{font-size:18px;font-weight:600}.gvb_card .head .right a{color:var(--color-text-2);text-decoration:none}

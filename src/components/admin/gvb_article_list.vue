@@ -34,10 +34,11 @@
 <template>
   <div class="article_list_view">
     <!--@ok 接收子组件发出的ok事件 emits(ok)-->
-    <gvb_article_upadte
+    <Gvb_article_update
         v-model:visible="updateVisible"
-         :data="recordData"
-    ></gvb_article_upadte>
+        :data="recordData"
+        @ok="refresh"
+    ></Gvb_article_update>
 
     <!--抽屉-->
     <gvb_article_drawer
@@ -45,13 +46,18 @@
         @ok="refresh">
     </gvb_article_drawer>
 
-    <!--内容的抽屉-->
+    <!--内容的抽屉 v-if 当articleUpdateId为真的时候再加载这个组件-->
     <gvb_article_content_drawer
         v-model:visible="articleContentVisible"
-        :id="articleUpdateId">
+        v-if="articleUpdateId"
+        :id="articleUpdateId as string"
+        @close="contentClose"
+        @ok="refresh"
+    >
     </gvb_article_content_drawer>
 
-    <gvb_table :url="articleListApi"
+    <gvb_table
+               :url="articleListApi"
                delete-url="/api/article"
                :columns="columns"
                default-delete
@@ -65,7 +71,6 @@
                @ok="refresh"
                @edit="editArticleInfo"
     >
-
       <!--封面图片-->
       <template #banner_url="{record}:{record: articleType}">
         <a-image :src="record.banner_url" style="border-radius: 5px;" height="50px"></a-image>
@@ -115,20 +120,16 @@ import {reactive, ref} from "vue";
 import {articleCategoryListApi, articleListApi, type articleUpdateType} from "@/api/article_api"
 import {type articleType} from "@/api/article_api"
 import gvb_table, {
-  type actionOptionType,
   type filterOptionType,
-  type RecordType
 } from "@/components/common/gvb_table.vue";
 import type {FileItem} from "@arco-design/web-vue";
-import {useStore} from "@/stores";
 import {Random} from "mockjs";
-import Gvb_article_upadte from "@/components/common/gvb_article_update.vue";
+import Gvb_article_update from "@/components/common/gvb_article_update.vue";
 import {tagOptionsApi} from "@/api/tag_api";
 import Gvb_article_drawer from "@/components/common/gvb_article_drawer.vue";
 import Gvb_article_content_drawer from "@/components/common/gvb_article_content_drawer.vue";
 import type {paramsType} from "@/api";
 
-const store = useStore()
 const fileList = ref<FileItem[]>([])
 const columns = [
   {title: '文章标题', slotName: 'title'},
@@ -174,7 +175,7 @@ const params = reactive<paramsType & { is_user: boolean }>({
 const filterGroup: filterOptionType[] = [
   {
     label: "文章分类",
-    column: "category",
+    column: "key",
     source: articleCategoryListApi
   }, {
     label: "文章标签",
@@ -185,11 +186,8 @@ const filterGroup: filterOptionType[] = [
 
 //目的是刷新列表
 function refresh() {
+  console.log("我接收到了ok事件，我是文章列表")
   gvbTable.value.getList();
-}
-
-function beforeOpen() {
-  fileList.value = []
 }
 
 //让更新文章的弹窗不为真
@@ -206,6 +204,7 @@ const recordData = reactive<articleUpdateType>({
   source: "",
   title: "",
   banner_url: "",
+  created_at:""
 })
 
 function editArticleInfo(record: articleType) {
@@ -220,18 +219,25 @@ function editArticleInfo(record: articleType) {
   recordData.title = record.title
   recordData.id = record.id
   recordData.banner_url = record.banner_url
+  recordData.created_at = record.created_at
 }
 
 const createVisible = ref(false)
 const articleContentVisible = ref(false)
 const articleUpdateId = ref<string | undefined>(undefined)
 
-
-//编辑文章内容
+//编辑文章1-点击列表的编辑正文-弹出正文框
 function editArticleContent(record: articleType) {
+  //清空之前其他文章的正文
+  // recordData.content = ""
+  console.log("点击了编辑正文", record.id);
   articleContentVisible.value = true
   articleUpdateId.value = record.id
+  recordData.content = record.content
 }
 
+function contentClose() {
+  console.log("它点了x")
+}
 
 </script>

@@ -11,7 +11,7 @@ import type {listDataType} from "@/api";
 import {Message} from "@arco-design/web-vue";
 import {useStore} from "@/stores";
 
-import {Modal, Input, Button, Checkbox,Textarea} from "@arco-design/web-vue";
+import {Modal, Input, Button, Checkbox, Textarea} from "@arco-design/web-vue";
 
 const messageData = reactive<listDataType<messageType>>({
   list: [],
@@ -89,13 +89,12 @@ async function messagePublish() {
   //让滚动条自己往下滚动
   nextTick(() => {
     setTimeout(() => {
-      let dom = document.querySelector(".record_list")
-      dom.scrollTo(
-          {
-            top: dom.scrollHeight,
-            behavior: "smooth"
-          }, 500) //平滑滚动
-    })
+      const dom = document.querySelector(".record_list");
+      dom?.scrollTo({
+        top: dom.scrollHeight,
+        behavior: "smooth"
+      });
+    }, 500);
   })
 }
 
@@ -111,7 +110,7 @@ watch(() => props.rev_user_id, () => {
 
 <template>
   <div class="gvb_message_record_component">
-<!--    <div class="head"></div>-->
+    <!--    <div class="head"></div>-->
     <div class="record_list">
       <div :class="{message:true,is_me:item.is_me}" v-for="item in messageRecordData.list">
         <img class="avatar" :src="item.send_user_avatar" alt="发送人头像"/>
@@ -127,8 +126,8 @@ watch(() => props.rev_user_id, () => {
     </div>
     <div class="message_record">
       <Textarea placeholder="请输入聊天内容" @keydown.enter.ctrl="messagePublish"
-                  v-model="messagePublishData.content" auto-size
-                  style="height:100%"></Textarea>
+                v-model="messagePublishData.content" auto-size
+                style="height:100%"></Textarea>
       <Button type="primary" @click="messagePublish">回复</Button>
     </div>
   </div>

@@ -1,10 +1,17 @@
 <script setup lang="ts">
 
 import Gvb_article_item from "@/components/common/gvb_article_item.vue";
-import {articleListApi, type articleType, type articleParamsType} from "@/api/article_api";
+import {
+  articleListApi,
+  type articleType,
+  type articleParamsType,
+  type articleUpdateType,
+  type articleDataType
+} from "@/api/article_api";
 import {reactive, watch} from "vue";
-import type {listDataType, paramsType} from "@/api";
+import type {baseResponse, listDataType, paramsType} from "@/api";
 import {useRoute} from "vue-router";
+
 const route = useRoute()
 
 const data = reactive<listDataType<articleType>>({
@@ -15,14 +22,13 @@ const data = reactive<listDataType<articleType>>({
 const params = reactive<articleParamsType>({})
 
 async function getData(p?: paramsType) {
-  if (p) {
+  if (p && typeof p === 'object') {
     Object.assign(params, p)
   }
   let res = await articleListApi(params)
   data.list = res.data.list
   data.count = res.data.count
 }
-
 
 //抛出这个函数
 defineExpose({
@@ -32,10 +38,10 @@ defineExpose({
 
 watch(() => route.query, () => {
   if (route.query.date !== "") {
-    params.date = route.query.date
+    params.date = route.query.date as string
   }
   if (route.query.tag !== "") {
-    params.tag = route.query.tag
+    params.tag = route.query.tag as string
   }
   getData()
 }, {deep: true, immediate: true})
@@ -51,8 +57,9 @@ watch(() => route.query, () => {
     </div>
 
     <div class="page">
-      <a-pagination :total="data.count" v-model:current="params.page"
-                    @change="getData"
+      <a-pagination :total="data.count"
+                    v-model:current="params.page"
+                    @change="getData(params.page !== undefined ? { page: params.page } : undefined)"
                     show-total></a-pagination>
     </div>
   </div>
@@ -63,18 +70,13 @@ watch(() => route.query, () => {
 
   .article_card {
     background: none;
-    //padding: 0;
-    //width: 100%;
 
     .head {
       background-color: var(--color-bg-1);
     }
-
   }
 
   .gvb_card {
-    //padding: 0;
-
     .body {
       padding: 0;
     }
@@ -107,6 +109,7 @@ watch(() => route.query, () => {
         .data {
           display: flex;
           align-items: center;
+          margin-top: 0px;
 
           .category {
             margin-bottom: 5px;

@@ -19,7 +19,7 @@ const data = reactive<newsType[]>([])
   //   size: 10
   // });
   //
-  // if (res.code) {
+  // if (res.code.vue) {
   //   // 如果请求失败，则将默认数据赋值给 data
   //   Object.assign(data, [
   //     {

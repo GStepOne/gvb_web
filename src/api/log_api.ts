@@ -10,8 +10,13 @@ export function logReadApi(id: number): Promise<baseResponse<string>> {
     return useAxios.put("/api/log", {id: id})
 }
 
+
+//DEBUG_LEVEL Level = 1
+// 	INFO_LEVEL  Level = 2
+// 	WARN_LEVEL  Level = 3
+// 	ERROR_LEVEL Level = 4
 export interface logRequest extends paramsType {
-    level?: number //1 info 2 warning 3 err
+    level?: number //1 debug 2 info 3 warning
     type?: number  //1 登录 2操作 3 运行
     ip?: string
     user_id?: number

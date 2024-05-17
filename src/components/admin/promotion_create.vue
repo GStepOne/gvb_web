@@ -93,7 +93,7 @@ function beforeOpen() {
                      :rules="[{required:true,message:'请输入跳转链接'}]"
                      :validate-trigger="['blur']"
         >
-          <a-input v-model="form.href" placeholder="广告跳转链接"></a-input>
+          <a-input v-model="form.href" placeholder="广告跳转链接，请以http、https 开头"></a-input>
         </a-form-item>
         <!--图片链接 field 属性用于指定表单项的字段名 当表单被提交时，表单项的值将根据 field 属性的值被映射到表单数据对象中相应的字段-->
         <a-form-item field="images" label="图片链接"

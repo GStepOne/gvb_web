@@ -2,7 +2,7 @@
 import {useStore} from "@/stores";
 import {reactive, ref, watch} from "vue";
 import Login_charts from "@/components/charts/login_charts.vue";
-import {dataLoginApi, type LoginDataType} from "@/api/data_api";
+import {dataLoginApi, type LoginDataType,type loginDataRequest} from "@/api/data_api";
 
 const store = useStore();
 const isShow = ref<boolean>(false);
@@ -30,7 +30,7 @@ const dateFilterOptions = [
 
 
 const params = reactive<loginDataRequest>({
-  date: 1
+  data: 1
 })
 
 // LoginDataType

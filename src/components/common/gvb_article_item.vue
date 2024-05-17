@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {articleUpdateType, articleDataType} from "@/api/article_api";
+import type {articleUpdateType, articleDataType, articleType} from "@/api/article_api";
 import {dateFormat} from "../../utils/date";
 
 interface Props {

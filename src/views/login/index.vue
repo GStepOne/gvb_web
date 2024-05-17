@@ -67,11 +67,11 @@ async function init(query: routerQuery) {
 
   //重定向到上次登录的页面
   // window.history.state.back
-  let redirectUrl = localStorage.getItem("redirectPath")
-  if (redirectUrl === null) {
-    redirectUrl = "/"
-  }
-  router.push(redirectUrl)
+  // let redirectUrl = localStorage.getItem("redirectPath")
+  // if (redirectUrl === null) {
+  //   redirectUrl = "/nana"
+  // }
+  router.push("/nana")
 
 }
 

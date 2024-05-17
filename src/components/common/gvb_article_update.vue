@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import {reactive, ref, watch} from "vue";
-import {type articleDataType, type articleItemType, articleUpdateApi, type articleUpdateType} from "@/api/article_api";
+import {
+  articleCreateApi,
+  type articleDataType,
+  type articleItemType, type articleType,
+  articleUpdateApi,
+  type articleUpdateType
+} from "@/api/article_api";
 import {imageIdListApi, type imageIdType} from "@/api/image_api";
 import {tagOptionsApi} from "@/api/tag_api";
 import {articleCategoryListApi} from "@/api/article_api"
@@ -9,7 +15,6 @@ import type {optionType} from "@/api"
 import Gvb_article_item from "@/components/common/gvb_article_item.vue";
 import {Random} from "mockjs";
 import {dateTimeFormat} from "@/utils/date";
-import {computed} from "vue";
 
 interface Props {
   visible: boolean
@@ -21,14 +26,13 @@ interface Props {
 const props = defineProps<Props>()
 const {title = "文章更新", type = "update"} = props
 
-
-const form = reactive<articleUpdateType & articleDataType>({
+const form = reactive<articleDataType& articleUpdateType>({
   id: "",
   collects_count: Random.integer(0, 100),
   digg_count: Random.integer(0, 100),
   comment_count: Random.integer(0, 100),
   look_count: Random.integer(0, 100),
-  created_at: new Date().toDateString(),
+  created_at: dateTimeFormat(new Date().toLocaleString()),
   tags: []
 })
 
@@ -47,13 +51,13 @@ const previewData = reactive<articleItemType>({
 
 watch(() => props.data, () => {
   Object.assign(form, props.data)
-
+  console.log(props.type) //type 不对
   previewData.abstract = props.data.abstract as string
   previewData.banner_url = props.data.banner_url as string
   previewData.category = props.data.category as string
   previewData.title = props.data.title as string
   previewData.id = props.data.id as string
-  previewData.created_at = new Date().toDateString()
+  previewData.created_at = props.data.created_at as string
 }, {deep: true, immediate: true})
 
 //获取分类的接口
@@ -73,7 +77,6 @@ async function getTags() {
 }
 
 getTags()
-
 //图片id
 const imageIdList = ref<imageIdType[]>([])
 
@@ -85,38 +88,49 @@ async function getImageList() {
 
 //直接调用一下获取数据
 getImageList()
-
 const emits = defineEmits(["update:visible", "ok"])
 const formRef = ref()
 
-async function okHandler() {
-  let v = await formRef.value.validate()
-  if (v) {
-    Message.error(v.message)
+
+//文章修改3--修改元数据-点击确定按钮触发
+async function updateArticleMeta() {
+  console.log("updateArticleMeta,验证参数，关掉弹框、触发父组件ok事件", type);
+  let res = await formRef.value.validate();
+  // 验证通过，继续执行后续逻辑
+  if (res) {
     return
   }
-  form.created_at = dateTimeFormat(form.created_at as string) as string
-
   if (type === "update") {
+    //接收来自子组件的form参数
     let res = await articleUpdateApi(form)
     if (res.code) {
       Message.error(res.msg)
-      return
+      return;
     }
     Message.success(res.msg)
-    emits("update:visible", false)
-    emits("ok")
+    emits("update:visible", false)//关闭窗口
+    //触发父组件的列表更新
+    emits("ok", form)
+    return
   }
 
-  //点击ok的时候，值传递出去
   if (type === "add") {
-    emits("update:visible", false)
-    emits("ok", form)
+    // console.log('created_at', form.created_at)
+    // form.created_at = form.created_at?.replace(/\//g, '-');
+    // let res = await articleCreateApi(form)
+    // if (res.code) {
+    //   Message.error(res.msg)
+    //   return;
+    // }
+    // Message.success(res.msg)
+    emits("update:visible", false)//关闭窗口
+    //触发父组件的列表更新
+    emits("ok",form)
   }
 }
 
+//文章修改4-修改元数据-点击确定按钮触发
 function bannerChange(val: any) {
-  console.log("imageIdList", imageIdList)
   const image = imageIdList.value.find((item) => item.id as number === val)
   form.banner_url = (image as imageIdType).path as string
 }
@@ -127,33 +141,36 @@ function randomCover() {
   form.banner_url = image.path
 }
 
-
-const coverSrc = (data: any) => {
+const coverSrc = (data: any): string => {
   let value = data.value;
   if (value) {
-    return computed((): string => {
-      const image = imageIdList.value.find((item) => item.id as number === value) as imageIdType
-      console.log('image', image)
-      return image.path
-    })
+    const image = imageIdList.value.find((item) => item.id === value) as imageIdType;
+    return image ? image.path : '';
   }
+  return '';
 }
 
+// const currentTime = ref(new Date().toLocaleString())
+
+console.log(new Date().toLocaleDateString())
+console.log(new Date().toLocaleTimeString())
 
 </script>
+
 <template>
-  <div>
+  <div class="article_update_gvb">
     <a-modal
         width="30%"
         :title="title"
         :visible="props.visible"
         modal-class="gvb_article_modal_body"
         @cancel="emits('update:visible',false)"
-        :on-before-ok="okHandler">
+        @ok="updateArticleMeta"
+    >
       <a-form ref="formRef" :model="form">
         <!-- 文章标题-->
         <a-form-item field="title" label="文章标题"
-                     :rules="[{required:true,message:'文章标题'}]"
+                     :rules="[{required:true,message:'文章标题必填'}]"
                      :validate-trigger="['blur']"
         >
           <a-input v-model="form.title" placeholder="文章标题"></a-input>
@@ -183,7 +200,6 @@ const coverSrc = (data: any) => {
           <a-select v-model="form.tags" multiple placeholder="文章标签" :options="tagOptions"></a-select>
         </a-form-item>
 
-
         <!-- banner图-->
         <a-form-item label="文章封面">
           <a-select v-model="form.banner_id" placeholder="选择封面" allow-clear @change="bannerChange">
@@ -193,7 +209,7 @@ const coverSrc = (data: any) => {
               </div>
             </a-option>
             <template #label="{ data }">
-              <img style="border-radius: 5px" width="40px" height="40px" :src="coverSrc(data)" alt=""/>
+              <img style="border-radius: 5px" width="40px" height="40px" :src="coverSrc(data) as string" alt=""/>
               <label style="margin-left: 10px ">{{ data.label }}</label>
             </template>
           </a-select>
@@ -219,14 +235,15 @@ const coverSrc = (data: any) => {
                      :rules="[{message:'发布时间'}]"
                      :validate-trigger="['blur']"
         >
+          <!--这里不要用default value 用model-value好使-->
           <a-date-picker
-              showTime
+              show-time
+              allow-clear
               showNowBtn
-              :defaultValue="dateTimeFormat(form.created_at as string)"
+              v-model:modelValue="form.created_at"
           >
           </a-date-picker>
         </a-form-item>
-
         <a-form-item label="预览"
                      v-if="form.title && form.banner_url && form.category" content-class="preview_body">
           <gvb_article_item :data="form" preview></gvb_article_item>
@@ -237,23 +254,24 @@ const coverSrc = (data: any) => {
 </template>
 
 <style scoped lang="scss">
-.banner_image_div {
-  display: flex;
-  align-items: center;
+.article_update_gvb {
+  .banner_image_div {
+    display: flex;
+    align-items: center;
 
-  image {
-    margin-right: 5px;
-    border-radius: 5px;
-    padding: 5px 0;
-  }
+    image {
+      margin-right: 5px;
+      border-radius: 5px;
+      padding: 5px 0;
+    }
 
-  .preview_body {
-    max-width: inherit;
-  }
+    .preview_body {
+      max-width: inherit;
+    }
 
-  .gvb_article_modal_body .arco-modal-body {
-    overflow-x: hidden;
+    .gvb_article_modal_body .arco-modal-body {
+      overflow-x: hidden;
+    }
   }
 }
-
 </style>

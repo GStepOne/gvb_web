@@ -1,0 +1,1 @@
+.chat_view{height:100vh;background-color:var(--bg)}.chat_view main{width:100%;display:flex;justify-content:center;padding-top:60px}.chat_view main .container{width:var(--container_width)}

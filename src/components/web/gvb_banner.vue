@@ -2,30 +2,33 @@
 import {menuDetailApi} from "@/api/menu_api";
 import type {menuType} from "@/api/menu_api";
 import {reactive, watch} from "vue";
-//打字机效果
+//打字机效果 下面就是忽略掉
+// @ts-ignore
 import vuetyped from "vue3typed/libs/typed/index.vue"
 
 import {useStore} from "@/stores";
+import {imageListApi, type imageType} from "@/api/image_api";
+import {carouselListApi} from "@/api/carousel_api";
 
 const store = useStore();
-
-const images = [
-  'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
-  'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp',
-  'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/0265a04fddbd77a19602a15d9d55d797.png~tplv-uwbnlip3yd-webp.webp',
-];
 
 const data = reactive<BannerType>({
   abstract: [],
   banner_time: 7,
-  banners: [],
+  banners: "",
   slogan: "",
 })
+
+const imageData = reactive([{
+  path: "",
+  name: "",
+  id: 0
+}])
 
 interface BannerType {
   abstract: string | string[]
   banner_time?: number
-  banners: string | BannerType[]
+  banners: string
   slogan: string
 }
 
@@ -35,50 +38,32 @@ interface Props {
 
 const props = defineProps<Props>()
 
-// async function getData() {
-//
-//   if (props.data) {
-//     if (typeof props.data.banners === 'string') {
-//       data.banners = [{path: props.data.banners}]
-//     }
-//     data.abstract = props.data.abstract
-//     data.banner_time = props.data.banner_time
-//     data.slogan = props.data.slogan
-//     // Object.assign(data, props.data)
-//     return
-//   }
-//
-//   const key = `bannerList__${location.pathname}`
-//   const val = sessionStorage.getItem(key)
-//   let jsonData = JSON.parse(val)
-//   if (val !== null) {
-//     try {
-//       Object.assign(data,)
-//       data.banners = jsonData.banners
-//       data.abstract = jsonData.abstract
-//       data.banner_time = jsonData.banner_time
-//       data.slogan = jsonData.slogan
-//       return
-//     } catch (e) {
-//       console.log(e)
-//     }
-//   }
-//
-//   let res = await menuDetailApi(location.pathname)
-//   Object.assign(data, res.data)
-//   data.banners = res.data.banners
-//   data.abstract = res.data.abstract
-//   data.banner_time = res.data.banner_time
-//   data.slogan = res.data.slogan
-//   console.log(data)
-//   sessionStorage.setItem(key, JSON.stringify(data))
-// }
+async function getData() {
+  // const key = `bannerList__${location.pathname}`
+  // const val = sessionStorage.getItem(key)
+  //
+  // if (val !== null) {
+  //   try {
+  //     let jsonData = JSON.parse(val)
+  //     Object.assign(data, jsonData)
+  //     return
+  //   } catch (e) {
+  //     console.log(e)
+  //   }
 
-// getData();
+  let res = await carouselListApi()
+  // console.log(res.data)
+  Object.assign(imageData, res.data.list)
 
-// watch(() => props.data, () => {
-//   getData()
-// }, {immediate: true})
+  //   sessionStorage.setItem(key, JSON.stringify(data))
+  // }
+}
+
+getData();
+
+watch(() => props.data, () => {
+  getData()
+}, {immediate: true})
 
 </script>
 
@@ -113,15 +98,10 @@ const props = defineProps<Props>()
         indicator-type="dot"
         show-arrow="hover"
     >
-      <a-carousel-item v-for="image in images">
-        <img class="banner_image"
-             :src="image"
-        />
+      <a-carousel-item v-for="item in imageData">
+        <img class="banner_image" :src="item.path"/>
+        {{ item.path }}
       </a-carousel-item>
-
-      <!--      <a-carousel-item v-for="item in data.banners">-->
-      <!--        <img class="banner_image" :src="item.path"/>-->
-      <!--      </a-carousel-item>-->
 
     </a-carousel>
   </div>
@@ -129,9 +109,10 @@ const props = defineProps<Props>()
 
 <style scoped lang="scss">
 .gvb_banner {
-  width: 100%;
+  width: 1527px;
   height: 600px;
   position: relative;
+  padding: 0;
 
   .head {
     position: absolute;
@@ -158,7 +139,7 @@ const props = defineProps<Props>()
     height: 100%;
 
     .banner_image {
-      width: 100%;
+      width: 1527px;
       height: 100%;
       object-fit: cover;
     }

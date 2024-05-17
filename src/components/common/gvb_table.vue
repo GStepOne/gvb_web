@@ -33,6 +33,7 @@
         <a-select
             :placeholder="item.label"
             :options="item.options"
+            allow-clear
             v-for="item in filterGroup"
             @change="filterChange(item,$event)"
         ></a-select>
@@ -168,8 +169,6 @@ async function getList(p?: paramsType & any) {
     //把p的值赋值给params
     Object.assign(params, p)
   }
-
-  console.log('get_list',params)
   isLoading.value = true
   let res = await props.url(params)
   if (res.code) {
@@ -180,6 +179,12 @@ async function getList(p?: paramsType & any) {
 
   data.list = res.data.list
   data.count = res.data.count
+}
+
+
+async function clearDatum() {
+  data.list = []
+  data.count = 0
 }
 
 //立马执行
@@ -363,13 +368,6 @@ export interface filterOptionType {
 function filterChange(item: any, val: any) {
   getList({[item.column]: val})
 }
-
-
-function clearData() {
-  data.list = []
-  data.count = 0
-}
-
 //添加
 </script>
 

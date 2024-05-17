@@ -65,7 +65,7 @@ function checkItem(record: commentArticleType) {
     </div>
     <!--评论组件-->
     <div class="comment">
-      <gvb_comment :article-id="articleId"></gvb_comment>
+      <gvb_comment :article-id="articleId as string"></gvb_comment>
     </div>
 
   </div>

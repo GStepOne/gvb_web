@@ -37,11 +37,11 @@ watch(() => props.articleId, () => {
 }, {immediate: true})
 
 
-const params = reactive<paramsType>()
+const params = reactive<paramsType>({})
 
 async function getData() {
   console.log("获取列表")
-  let res = await commentListApi(props.articleId)
+  let res = await commentListApi(props.articleId,params)
   data.list = res.data.list
   data.count = res.data.count
 }

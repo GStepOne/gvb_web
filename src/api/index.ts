@@ -2,9 +2,7 @@ import axios, {type AxiosInstance} from "axios";
 import {useStore} from "@/stores";
 import {Message} from "@arco-design/web-vue"
 //创建实例
-
 export const useAxios: AxiosInstance = axios.create({
-
     // baseURL:"http://127.0.0.1:8081", //只是这样会有cors问题
     //这个跟vite那个只能留一个
     baseURL: "",
@@ -16,22 +14,10 @@ export interface baseResponse<T> {
     msg: string
 }
 
-
-// export interface listResponse<T> {
-//     code: number
-//     data: {
-//         count: number
-//         list: []
-//     }
-//     msg: string
-// }
-
-
 export interface listDataType<T> {
     count: number
     list: T[]
 }
-
 
 export interface paramsType {
     page?: number

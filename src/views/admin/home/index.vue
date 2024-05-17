@@ -37,33 +37,39 @@ const QuickEntryList: QuickEntryType[] = [
     color: "#69c0ff",
     icon: IconLock,
     text: "日志列表",
-    name: "user_list"
+    name: "user_list",
+    link: "",
   },
   {
     bg: "#d2ecff",
     color: "#7c206a",
     icon: IconBook,
+    name:"",
     text: "博客列表",
-    link: "https://www.liritian.com"
+    link: "https://www.liritian.com",
   },
   {
     bg: "#d2ecff",
     color: "#941eae",
     icon: IconUser,
-    text: "用户列表"
+    text: "用户列表",
+    link: "",
+    name:""
   },
   {
     bg: "#d2ecff",
     color: "#8c5120",
     icon: IconImage,
     text: "图片列表",
-    name: "image_list"
+    name: "image_list",
+    link: "",
   }, {
     bg: "#d2ecff",
     color: "#ff8469",
     icon: IconRobot,
     text: "群聊记录",
-    name: "chat_list"
+    name: "chat_list",
+    link: "",
   }
 ]
 
@@ -80,7 +86,6 @@ function goLink(item: QuickEntryType) {
   if (item.link) {
     window.open(item.link, "_blank")
   }
-
 }
 
 interface updateLogType {
@@ -154,7 +159,7 @@ const user = store.userInfo.user_name
         Morning，{{ user }}，a new day will be better!
       </div>
       <div class="weather">
-        <gvb_weather> </gvb_weather>
+        <gvb_weather></gvb_weather>
       </div>
       <div class="statistics">
       <span>

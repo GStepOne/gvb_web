@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import * as echarts from "echarts";//* 代表引入所有
-import type {EChartsOption} from "echarts";
-import {onMounted, ref} from "vue";
+import * as echarts from "echarts";
+import type { EChartsOption, TopLevelFormatterParams } from "echarts/types/dist/shared.d.ts";
+import { onMounted, ref } from "vue";
 import router from "@/router";
-import type {TopLevelFormatterParams} from "echarts/types/dist/shared";
 
 interface Props {
   dateList: string[]
-  countList: Array<Array<number>>
+  countList: Array<Array<string|number>>
   theme: boolean
 }
 
@@ -106,7 +105,7 @@ onMounted(() => {
       },
       yearLabel: {show: !1},
       dayLabel: {
-        formatter: "{start} 1st",
+        // formatter: "{start} 1st",
         nameMap: "cn",
         fontSize: 11,
         color: color

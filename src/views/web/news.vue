@@ -11,7 +11,7 @@ interface newsAsideType {
   font: string
 }
 
-const newsAside: newsAsideType = [
+const newsAside: newsAsideType[] = [
   {
     id: "KqndgxeLl9",
     name: "微博",
@@ -57,12 +57,15 @@ function checkAside(item: newsAsideType) {
 import {computed} from "vue";
 
 const activeName = computed(() => {
-  return newsAside.find((item) => params.id === item.id).name
-})
+  const foundItem = newsAside.find((item) => params.id === item.id);
+  return foundItem ? foundItem.name : ""; // 返回一个默认值，例如空字符串
+});
 
 const activeFont = computed(() => {
-  return newsAside.find((item) => params.id === item.id).font
-})
+  const foundItem = newsAside.find((item) => params.id === item.id);
+  return foundItem ? foundItem.font : ""; // 返回一个默认值，例如空字符串
+});
+
 
 const newsList = ref<newsType[]>([])
 
@@ -72,10 +75,8 @@ const params = reactive({
 })
 
 async function getData() {
-  console.log(params.id)
   let res = await newsListApi(params)
   newsList.value = res.data
-  console.log(res)
 }
 
 getData();

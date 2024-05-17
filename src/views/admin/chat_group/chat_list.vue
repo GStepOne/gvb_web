@@ -29,7 +29,7 @@ const config = reactive<chatGroupConfigType>({
 
 //获取配置
 async function getConfig() {
-  let res = await settingsInfoApi("chat_group") as baseResponse<chatGroupConfigType>
+  let res = await settingsInfoApi("chat_group")
 
   console.log('data', typeof res.data) //object
   if (res.code) {

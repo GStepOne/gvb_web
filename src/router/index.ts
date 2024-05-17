@@ -9,7 +9,6 @@ const router = createRouter({
         {
             path: '/',
             name: 'web',
-            // component: () => import("../views/web/index.vue"),
             children: [
                 {
                     path: "/",
@@ -53,16 +52,18 @@ const router = createRouter({
             ]
         },
         {
-            path: '/login',
+            path: '/login',//登录
             name: 'login',
             component: () => import("../views/login/index.vue")
         },
         {
-            path: '/admin',
-            name: 'admin',
+            path: '/nana',
+            name: 'nana',
             component: () => import("../views/admin/index.vue"),
             meta: {
-                title: "首页"
+                title: "首页",
+                isAdmin: true,//只有管理员能看
+                isLoggedIn: true,
             },
             children: [
                 {
@@ -203,12 +204,20 @@ const router = createRouter({
                             component: () => import("../views/admin/system/log_list.vue")
                         },
                         {
+                            path: "carousel_list",
+                            name: "carousel_list",
+                            meta: {
+                                title: "轮播图"
+                            },
+                            component: () => import("../views/admin/system/carousel_list.vue")
+                        },
+                        {
                             path: "system",
                             name: "system_settings",
                             meta: {
                                 title: "系统配置"
                             },
-                            redirect: "/admin/system/system/site",
+                            redirect: "/nana/system/system/site",
                             component: () => import("../views/admin/system/system_settings.vue"),
                             children: [
                                 {
@@ -287,13 +296,18 @@ import NProgress from "nprogress";
 router.beforeEach((to, from, next) => {
     const store = useStore()
     const meta: RouteMeta = to.meta
+    console.log("当前登录", store.isLogin)
 
-    if (meta.isLogin && !store.isLogin) {
-        Message.warning("需要登录")
-        // router.push({name: from.name as string})
-        next(false)
-        return
+    if (!store.isLogin) {
+        if (to.path === '/login') {
+            next();//这里不能写false
+            return;
+        }else {
+            next({path: '/login'}); // 重定向到登录页面
+            return;
+        }
     }
+
     //如果是普通用户
     if (store.isCommon && (meta.isAdmin || meta.isTourist)) {
         Message.warning("普通用户权限不足")
@@ -312,7 +326,6 @@ router.beforeEach((to, from, next) => {
     NProgress.start()
     //判断目标地址的meta值
     next()
-
 })
 
 

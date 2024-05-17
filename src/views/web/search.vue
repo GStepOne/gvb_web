@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {reactive, ref} from "vue";
+import {reactive, ref, watch} from "vue";
 import Gvb_nav from "@/components/web/gvb_nav.vue";
 import type {listDataType, paramsType} from "@/api";
 import type {optionType} from "@/types";
@@ -13,7 +13,7 @@ import {useStore} from "@/stores";
 
 const store = useStore();
 
-const params = reactive<articleParamsType & { sort: sortType }>({
+const params = reactive<articleParamsType>({
   sort: "",
   tag: "",
   category: "",
@@ -47,9 +47,8 @@ async function getCategoryOption() {
 
 getCategoryOption()
 
-function checkKey(key: "sort" | "category" | "tag", item: optionType) {
-  console.log(params[key])
-  params[key] = item.value as string
+function checkKey(key: keyof articleParamsType, item: optionType) {
+  (params[key] as articleParamsType[keyof articleParamsType]) = item.value;
 }
 
 async function getTagOption() {
@@ -67,13 +66,21 @@ const data = reactive<listDataType<articleType>>({
 
 //获取文章列表
 async function getData() {
-  console.log(params)
+  console.log("我是getData")
   let res = await articleListApi(params)
   data.list = res.data.list
   data.count = res.data.count
 }
-
 getData();
+
+const isShow = ref<boolean>(false)
+watch(() => data.list, () => {
+  console.log("我是watch")
+  isShow.value = true
+});
+
+
+
 </script>
 
 <template>
@@ -84,7 +91,7 @@ getData();
         <div class="header">
           <div class="head">
             <div class="slogan">
-              {{ store.siteInfo.slogan ? store.siteInfo.slogan : "Jack Bloggggg" | 搜索 }}
+              {{ store.siteInfo.slogan.length ? store.siteInfo.slogan : "Jack Bloggggg | 搜索" }}
             </div>
             <a-input class="search_ipt"
                      v-model="params.key"
@@ -112,44 +119,44 @@ getData();
             </div>
           </div>
           <div class="source">
-            <template v-if="data.list.length">
+            <template v-if="isShow">
               <div class="article_list">
                 <div class="item" v-for="item in data.list">
                   <div class="top">
-                    <img :src="item.banner_url" alt=""/>
+                    <img :src="((item as unknown) as articleType).banner_url" alt=""/>
                   </div>
                   <div class="bottom">
                     <div class="title">
-                      <router-link :to="{name:'article',params:{id:item.id}}" v-html="item.title"></router-link>
+                      <router-link :to="{name:'article',params:{id:((item as unknown) as articleType).id}}" v-html="((item as unknown) as articleType).title"></router-link>
                     </div>
 
                     <div class="abstract">
                       <!--文本的截断和省略-->
                       <a-typography-paragraph :ellipsis="{rows:2,showTooltip:true,css:true}">
-                        {{ item.abstract }}
+                        {{ ((item as unknown) as articleType).abstract }}
                       </a-typography-paragraph>
                     </div>
 
                     <div class="data">
                       <span v-if="params.sort==='look_count desc' || params.sort===''">
                         <IconEye></IconEye>
-                        {{ item.look_count }}
+                        {{ ((item as unknown) as articleType).look_count }}
                       </span>
                       <span v-if="params.sort==='digg_count desc'">
                         <IconThumbUp></IconThumbUp>
-                        {{ item.digg_count }}
+                        {{ ((item as unknown) as articleType).digg_count }}
                       </span>
                       <span v-if="params.sort==='collects_count desc'">
                           <IconStar></IconStar>
-                        {{ item.collects_count }}
+                        {{ ((item as unknown) as articleType).collects_count }}
                       </span>
                       <span v-if="params.sort==='comment_count desc'">
                           <IconMessage></IconMessage>
-                        {{ item.comment_count }}
+                        {{ ((item as unknown) as articleType).comment_count }}
                       </span>
                       <span>
                         <IconClockCircle></IconClockCircle>
-                        {{ dateFormat(item.created_at) }}
+                        {{ dateFormat(((item as unknown) as articleType).created_at) }}
                       </span>
                     </div>
                   </div>
@@ -216,6 +223,7 @@ getData();
       }
 
       .action {
+
         margin-top: 20px;
         background-color: var(--color-bg-1);
         padding: 20px;
@@ -223,10 +231,10 @@ getData();
 
         .item {
           margin-bottom: 25px;
-
+          padding: 10px;
           span {
             //margin-bottom: 10px;
-            margin-right: 20px;
+            //margin-right: 20px;
             cursor: pointer;
             padding: 5px 10px;
             border-radius: 5px;

@@ -3,7 +3,7 @@ import {ref} from "vue";
 import {useRouter} from "vue-router";
 import {useRoute} from "vue-router";
 import {tagArticleListApi} from "@/api/tag_api";
-
+import type{tagType} from "@/api/tag_api";
 
 const router = useRouter();
 
@@ -13,7 +13,7 @@ const active = ref<string>(route.query.tag as string);
 
 const list = ref<tagType[]>([])
 
-function checkTag(item) {
+function checkTag(item:any) {
   if (active.value === item.tag) {
     //第二次点击
     active.value = ""
@@ -52,40 +52,42 @@ getData()
 
 <style scoped lang="scss">
 .gvb_tags {
+  //padding: 15px;
   position: relative;
+  //border: 1px dotted green;
   //关键帧动画
   @keyframes box_move {
     0% {
-      left: -10px;
-      top: -10px;
+      left: -15px;
+      top: -15px;
     }
     25% {
       left: 100%;
-      top: -10px;
+      top: -15px;
     }
     50% {
       left: 100%;
       top: 100%;
     }
     75% {
-      left: -10px;
+      left: -15px;
       top: 100%;
     }
     100% {
-      left: -10px;
-      top: -10px;
+      left: -15px;
+      top: -15px;
     }
   }
 
   &::after {
     display: block;
     position: absolute;
-    height: 10px;
-    width: 10px;
+    height: 13px;
+    width: 13px;
     content: "";
     background-color: var(--active);
-    left: -10px;
-    top: -10px;
+    left: -20px;
+    top: -20px;
     animation-name: box_move; //应用哪个动画
     animation-duration: 5s; //动画执行的时间
     animation-iteration-count: infinite; //一直执行
@@ -93,16 +95,14 @@ getData()
 
 
   .item {
-    padding: 5px;
+    padding: 15px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     color: var(--color-text-2);
-    width: 45%;
+    width: 50%;
     height: 40px;
     border-radius: 5px;
-
-    //background-color: var(--color-fill-1);
 
     &:nth-child(4n+1), &:nth-child(4n+2) {
       //颜色差异

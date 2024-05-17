@@ -20,7 +20,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const params = reactive<paramsType>()
+const params = reactive<paramsType>({})
 
 const store = useStore();
 
@@ -36,7 +36,7 @@ function applyShow(record: commentType) {
     return
   }
   nextTick(() => {
-    let dom = document.querySelector(`.comment_apply_ipt_${record.id.toString()} input`) as HTMLInputElement
+    let dom = document.querySelector(`.comment_apply_ipt_${record.id?.toString()} input`) as HTMLInputElement
     dom.focus()
   })
 }
@@ -48,14 +48,14 @@ async function applyComment(record: commentType) {
     return
   }
 
-  if (record.applyContent.trim().length === 0) {
+  if (record.applyContent?.trim().length === 0) {
     Message.warning("回复内容不能为空");
     return
   }
 
   const data: commentAddType = {
     article_id: record.article_id,
-    content: record.applyContent,
+    content: record.applyContent as string,
     parent_comment_id: record.id,
   }
 
@@ -68,13 +68,13 @@ async function applyComment(record: commentType) {
   //清空之前的
   record.applyContent = ""
   //刷新之后 仍旧保留回复的输入框
-  saveId.value = record.id
+  saveId.value = record.id as number
 
   getListAgain()
 }
 
 async function deleteComment(record: commentType) {
-  let res = await commentDeleteApi(record.id)
+  let res = await commentDeleteApi(record.id as number)
   if (res.code) {
     Message.error(res.msg)
     return
@@ -93,13 +93,13 @@ function getListAgain() {
 
 //评论点赞
 async function commentDigg(record: commentType) {
-  let res = await commentDiggApi(record.id)
+  let res = await commentDiggApi(record.id as number)
   if (res.code) {
     Message.error(res.msg)
     return
   }
   Message.success(res.msg)
-  record.digg_count++
+  record.digg_count = record.digg_count as number +1
 }
 
 function avatarClick(item: commentType) {
@@ -107,7 +107,7 @@ function avatarClick(item: commentType) {
     console.log('不能与自己聊天')
     return
   }
-  showMessageRecord(item.user_id, item.user.nick_name)
+  showMessageRecord(item.user_id as number, item.user?.nick_name as string)
 }
 
 </script>
@@ -117,15 +117,15 @@ function avatarClick(item: commentType) {
     <a-comment
         v-for="item in data"
         :content="item.content"
-        :author="item.user.nick_name"
-        :datetime="relativeCurrentTime(item.created_at)"
+        :author="item.user?.nick_name"
+        :datetime="relativeCurrentTime(item.created_at as string)"
     >
       <!--回复信息-->
       <template #actions>
         <span class="action" @click="commentDigg(item)"><IconThumbUp/>点赞({{ item.digg_count }})</span>
         <span class="action" @click="applyShow(item)"><IconMessage/>回复</span>
         <a-popconfirm
-            v-if="store.isAdmin || store.userInfo.userId === parseInt(item.user_id)"
+            v-if="store.isAdmin || store.userInfo.userId === item.user_id"
             content="是否删除这条评论?"
             @ok="deleteComment(item)">
           <span class="action"><IconDelete/>删除</span>
@@ -133,7 +133,7 @@ function avatarClick(item: commentType) {
       </template>
       <template #avatar>
         <a-avatar @click="avatarClick(item)">
-          <img :src="item.user.avatar" alt="">
+          <img :src="item.user?.avatar" alt="">
         </a-avatar>
       </template>
 
@@ -145,7 +145,7 @@ function avatarClick(item: commentType) {
         <template #content>
           <div class="apply_comment">
             <a-input :class="'comment_apply_ipt_'+item.id" @keydown.enter.ctrl="applyComment(item)"
-                     :placeholder="'回复'+item.user.nick_name"
+                     :placeholder="'回复'+item.user?.nick_name"
                      v-model="item.applyContent"
                      @click="applyShow(item)"></a-input>
             <a-button type="primary" style="margin-left: 10px" @click="applyComment(item)">回复</a-button>
@@ -153,7 +153,7 @@ function avatarClick(item: commentType) {
         </template>
       </a-comment>
       <!--递归自己的组件-->
-      <gvb_comment_list :data="item.sub_comments" @list="emits('list')"></gvb_comment_list>
+      <gvb_comment_list :data="item.sub_comments as commentType[]" @list="emits('list')"></gvb_comment_list>
     </a-comment>
   </div>
 </template>

@@ -6,6 +6,7 @@ import {userInfoApi} from "@/api/user_api";
 import type {userInfoType} from "@/api/user_api";
 import type {Themes} from "md-editor-v3";
 import {siteInfoApi, type siteInfoType} from "@/api/settings_api";
+import {ref} from "vue";
 
 export interface userStoreUserInfoType {
     user_name: string
@@ -19,6 +20,8 @@ export interface userStoreUserInfoType {
 
 const collapsed = false
 const theme = true //light false dark
+
+const navList = ref()
 
 const userInfo: userStoreUserInfoType = {
     nick_name: "",
@@ -114,7 +117,7 @@ export const useStore = defineStore('counter', {
             try {
                 this.userInfo = JSON.parse(val)
             } catch (e) {
-                console.error("解析token失败" + e)
+                // console.error("解析token失败" + e)
                 this.clearUserInfo()
                 return;
             }
@@ -139,8 +142,9 @@ export const useStore = defineStore('counter', {
             //清空localstorage里面
             localStorage.setItem("userInfo", "")
         },
-        async loadSiteInfo() {
 
+        //加载网站信息
+        async loadSiteInfo() {
             const val = sessionStorage.getItem("siteInfo")
             if (val !== null) {
                 try {
@@ -155,7 +159,6 @@ export const useStore = defineStore('counter', {
             // Object.assign(siteInfo,res.data)
             this.siteInfo = res.data
             sessionStorage.setItem("siteInfo",JSON.stringify(res.data))
-
         }
     },
     getters: {

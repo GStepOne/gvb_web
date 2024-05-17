@@ -1,0 +1,1 @@
+import{z as o}from"./index-D8gmBzh4.js";function a(t){return o.get("/api/advert",{params:t,headers:{Gvb_referer:location.pathname}})}const i={href:"",images:"",is_show:!1,title:"",updated_at:"",id:0};function n(t){return o.post("/api/advert",t)}function p(t,e){return o.put("/api/advert/"+t.toString(),e)}export{p as a,n as b,i as d,a as p};

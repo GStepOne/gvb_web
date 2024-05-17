@@ -8,15 +8,15 @@ import {promotionListApi} from "@/api/promotion_api";
 import type {promotionType} from "@/api/promotion_api";
 import {ref} from "vue";
 
-const images = ref<promotionType[]>({
+const images = ref<promotionType[]>([{
   "id": 0,
   "title": "",
   "href": "",
   "images": "",
-  "is_show": "",
+  "is_show": false,
   "created_at": "",
   "updated_at": "",
-})
+}])
 
 async function getData() {
   let res = await promotionListApi()

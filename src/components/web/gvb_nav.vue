@@ -9,8 +9,8 @@ import Gvb_search from "@/components/web/gvb_search.vue";
 
 const store = useStore()
 //防止闪烁 有默认数据|缓存
-const navList = ref<menuNameType[]>([])
-
+// const navList = ref<menuNameType[]>([])
+//
 // async function getData() {
 //   //这里用缓存的目的是防止加载的时候闪烁
 //   const val = sessionStorage.getItem("navList")
@@ -67,8 +67,9 @@ onUnmounted(() => {
     <div class="gvb_nav_container">
       <div class="left">
         <div class="logo">
-          <div class="slogan">Jack New Bee</div>
-          <div class="en_slogan">Jack Awesome</div>
+          <div class="slogan"> {{ store.siteInfo.slogan }}</div>
+
+          <div class="en_slogan"> {{ store.siteInfo.slogan_en }}</div>
         </div>
         <div class="nav">
           <!--          &lt;!&ndash;因为官方建议不要在一个组件里用&ndash;&gt;-->
@@ -83,7 +84,7 @@ onUnmounted(() => {
           <!--          <router-link >官方文档</router-link>-->
 
         </div>
-          <gvb_search></gvb_search>
+        <gvb_search></gvb_search>
       </div>
       <div class="right">
         <div class="login" v-if="!store.isLogin">
@@ -105,7 +106,7 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .gvb_nav {
-  top:0;
+  top: 0;
   z-index: 100;
   width: 100%;
   display: flex;

@@ -9,6 +9,9 @@ import {Message} from "@arco-design/web-vue";
 import {uploadImageApi} from "@/api/image_api"; // 封装的api
 const dialogVisible = ref<boolean>(false) // dialog的显示与隐藏
 const emits = defineEmits(['confirm']) // 自定义事件
+
+import {Random} from "mockjs";
+
 // 裁剪组件需要使用到的参数
 interface Options {
   img: string | ArrayBuffer | null // 裁剪图片的地址
@@ -147,7 +150,9 @@ const uploadFile = (type: string): void => {
 const cropperSuccess = async (dataFile: File) => {
   // 在接口请求中需要上传file文件格式, 并且该接口需要改header头部为form-data格式
   const {code, data} = await uploadImageApi(dataFile)
-  if (code.value === 0 && data) {
+  console.log("code", code)
+  console.log("data", data)
+  if (code === 0 && data) {
     return data
   }
 
@@ -155,7 +160,8 @@ const cropperSuccess = async (dataFile: File) => {
 // base64转图片文件
 const dataURLtoFile = (dataUrl: string, filename: string) => {
   const arr = dataUrl.split(',')
-  const mime = arr[0].match(/:(.*?);/)[1]
+  const mime = (arr[0]?.match(/:(.*?);/) || [])[1] as string;
+
   const bstr = atob(arr[1])
   let len = bstr.length
   const u8arr = new Uint8Array(len)
@@ -167,7 +173,7 @@ const dataURLtoFile = (dataUrl: string, filename: string) => {
 // 上传图片（点击保存按钮）
 const onConfirm = () => {
   cropperRef.value.getCropData(async (data: string) => {
-    const dataFile: File = dataURLtoFile(data, 'images.png')
+    const dataFile: File = dataURLtoFile(data,  (Date.now()) + ".png")
     const res = await cropperSuccess(dataFile)
     // 触发自定义事件
     emits('confirm', res)

@@ -15,7 +15,7 @@
         no-confirm
     >
       <!--搜索的框-->
-      <template #action_other_search="{record}:{record: logType}">
+      <template #action_other_search="{ record }:{record?: logType}">
         <div class="search_addr">
           <a-input placeholder="地址搜索" v-model="params.addr" style="width: 110px" @change="getList"
                    @keydown.enter="getList"></a-input>
@@ -110,7 +110,6 @@ function getList() {
     params.status = undefined
   }
   gvbTable.value.getList(params)
-
 }
 
 
@@ -207,23 +206,18 @@ const logTypeOptions = [
 ]
 
 const logLevelOptions = [
-  {label: "info", value: 1},
-  {label: "warning", value: 2},
-  {label: "error", value: 3}
+  {label: "info", value: 2},
+  {label: "warning", value: 3},
+  {label: "error", value: 4}
 ]
-
-
 //切换日志类型
 function logTypeChange() {
-  gvbTable.value.clearData()
+  // gvbTable.value.clearDatum()
   columns.value = columnDict[params.type as keyof typeof columnDict]
   gvbTable.value.getList(params)
 }
 
-
 const logContent = ref("")
-
-
 function jsonPreview() {
   let jsonDomList = document.querySelectorAll(".log_json_body")
   jsonDomList.forEach((value: Element) => {

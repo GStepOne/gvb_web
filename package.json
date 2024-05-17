@@ -11,6 +11,7 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
+    "@types/echarts": "^4.9.22",
     "@types/mockjs": "^1.0.10",
     "axios": "^1.6.8",
     "dayjs": "^1.11.10",

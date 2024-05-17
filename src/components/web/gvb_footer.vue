@@ -9,7 +9,7 @@ let timer: number | null = null;
 const countDown = ref()
 
 onUnmounted(() => {
-  clearInterval(timer)
+  clearInterval(timer as number)
 })
 
 function countDownFunc() {

@@ -25,26 +25,37 @@ export interface articleType {
     title: string,
     updated_at: string,
     user_avatar: string,
-    user_id: string,
+    user_id: number,
     user_nick_name: string
     is_collect?: boolean,
     is_digg?: boolean,
-    next?: articleItem,
-    prev?: articleItem,
 }
 
+//    next?: articleItem,
+//     prev?: articleItem,
+
+type sortType =
+    ""
+    | "look_count desc"
+    | "created_at desc"
+    | "digg_count desc"
+    | "comment_count desc"
+    | "collects_count desc";
+
+//因为这里 paramsType 也定义了sort
 export interface articleParamsType extends paramsType {
     date?: string
     tag?: string
     category?: string
+    sort?: string
 }
 
-export function articleListApi(params: articleParamsType): Promise<baseResponse<listDataType<articleType[]>>> {
+export function articleListApi(params: articleParamsType): Promise<baseResponse<listDataType<articleType>>> {
     return useAxios.get("/api/article", {params: params})
 }
 
 //个人收藏的列表
-export function articleCollectsApi(params: paramsType): Promise<baseResponse<optionType[]>> {
+export function articleCollectsApi(params: paramsType): Promise<baseResponse<listDataType<optionType[]>>> {
     return useAxios.get("/api/article/collects", {params})
 }
 
@@ -97,6 +108,9 @@ export interface articleDataType {
     digg_count: number,
     comment_count: number,
     look_count: number,
+    id?: string,
+    created_at?: string
+    tags?: string[]
 }
 
 export function articleCreateApi(data: articleUpdateType): Promise<baseResponse<string>> {
@@ -113,7 +127,7 @@ export interface articleCalendarType {
     date: string
 }
 
-export function articleCalendarApi() {
+export function articleCalendarApi(): Promise<baseResponse<articleCalendarType[]>> {
     return useAxios.get("/api/article/calendar");
 }
 

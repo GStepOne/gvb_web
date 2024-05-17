@@ -40,7 +40,7 @@ async function getGroupData() {
   }
   // 判断谁是is_me
   const list = []
-  res.data.list.forEach(((item) => {
+  res.data.list.forEach(((item: any) => {
     item.is_me = (item.nick_name == chatData.nick_name)
     list.push(item)
   }))
@@ -62,7 +62,7 @@ getGroupData()
 
 
 const isManage = ref<boolean>(false)
-const selectIdList = ref<string[]>([])
+const selectIdList = ref<number[]>([])
 
 async function removeChatGroup() {
   let res = await chatRemoveApi(selectIdList.value)
@@ -108,9 +108,14 @@ function websocketConnect() {
       avatar: jsonData.avatar,
       content: jsonData.content,
       created_at: jsonData.created_at,
-      msg_type: jsonData.msg_type,
+      message_type: jsonData.message_type,
       nick_name: jsonData.nick_name,
       is_me: chatData.nick_name === jsonData.nick_name,
+      model: {
+        id: "",
+        created_at: "",
+        updated_at: ""
+      }
     })
     //重新获取一下消息
     index++
@@ -128,28 +133,28 @@ function websocketConnect() {
   socket.value.onopen = function (event) {
     console.log('进入聊天室成功', event)
     Message.success("进入聊天室成功!");
+    // let _data = event
+    // let jsonData = JSON.parse(_data) as chatMessageType
+    // chatRecordData.list.push({
+    //   avatar: jsonData.avatar,
+    //   content: jsonData.content,
+    //   created_at: jsonData.created_at,
+    //   message_type: jsonData.message_type,
+    //   nick_name: jsonData.nick_name,
+    //   is_me: chat.nick_name === jsonData.nick_name,
+    // })
+    // console.log(jsonData)
   }
   //关闭
   socket.value.onerror = function (event) {
-    console.log("onerror:", event.ws)
     Message.error("进入聊天室失败!");
-
-    chatRecordData.list.push({
-      avatar: jsonData.avatar,
-      content: jsonData.content,
-      created_at: jsonData.created_at,
-      msg_type: jsonData.msg_type,
-      nick_name: jsonData.nick_name,
-      is_me: chat.nick_name === jsonData.nick_name,
-    })
-    console.log(jsonData)
   }
 
   //错误
   socket.value.onclose = function (event) {
     console.log("onClose", event)
     Message.error("链接已经断开了!");
-    socket.value = null
+    socket.value = undefined
   }
 }
 
@@ -169,7 +174,7 @@ function sendData() {
 
 
 function SendImageEvent() {
-
+  Message.warning("可以直接粘贴到聊天框里")
 }
 
 function SendFileEvent() {
@@ -196,7 +201,7 @@ onUnmounted(() => {
             props.config.is_online_people ? chatData.onlineCount : '∞'
           }}
         </div>
-        <div class="manage">
+        <div class="manage" v-if="store.isAdmin">
           <IconRefresh style="cursor: pointer" @click="flush"></IconRefresh>
           <a-checkbox v-model="isManage">管理模式</a-checkbox>
           <a-button @click="removeChatGroup" v-if="isManage && selectIdList.length" style="margin-left: 10px;"

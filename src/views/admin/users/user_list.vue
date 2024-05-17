@@ -37,7 +37,12 @@
       </template>
     </gvb_table>
 
-    <gvb_message_record_modal v-model:visible="messageVisible" :userId="userId"></gvb_message_record_modal>
+    <gvb_message_record_modal
+        v-model:visible="messageVisible"
+        :userId="userId"
+        :nickname="store.userInfo.user_name">
+
+    </gvb_message_record_modal>
   </div>
 </template>
 
@@ -55,6 +60,7 @@ import gvb_table, {
 } from "@/components/common/gvb_table.vue";
 import Gvb_message_record_modal from "@/components/common/gvb_message_record_modal.vue";
 import {showMessageRecord} from "@/components/common/gvb_message_record";
+import {useStore} from "@/stores";
 
 const columns = [
   {title: '昵称', dataIndex: 'nick_name'},
@@ -76,6 +82,7 @@ const columns = [
 
 const messageVisible = ref(false)
 const userId = ref(0)
+const store = useStore()
 
 function checkMessage(record: userInfoType) {
   // messageVisible.value = true

@@ -7,7 +7,8 @@ const data = reactive<weatherType>({
   city: "",
   weather: "",
   temperature: "",
-  winddirection: ""
+  winddirection: "",
+  humidity:"",
 })
 
 const isShow = ref(false)

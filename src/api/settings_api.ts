@@ -66,6 +66,7 @@ export type SettingTypes = EmailType | QQType | JwtType | QiniuType | chatGroupC
 
 export type SettingInfo = "qq" | "email" | "qiniu" | "jwt" | "chat_group"
 
+//as baseResponse<chatGroupConfigType>
 export function settingsInfoApi<T extends EmailType | QQType | JwtType | QiniuType>(name: SettingInfo): Promise<baseResponse<T>> {
     return useAxios.get("/api/settings/" + name.toString())
 }

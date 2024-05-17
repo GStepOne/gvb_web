@@ -32,7 +32,7 @@ function imageUploadSuccess(file: FileItem) {
     return
   }
   Message.success(response.msg)
-  text.value = response.data
+  text.value = "/"+response.data
   console.log("我上传成功了", text.value)
 }
 
