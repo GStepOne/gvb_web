@@ -7,10 +7,8 @@ import type {ImportMetaEnv} from "./env";
 //要做代理
 export default defineConfig(({mode}) => {
     let env: Record<keyof ImportMetaEnv, string> = loadEnv(mode, process.cwd())
-    // console.log(env, process.cwd())
     const serverUrl = env.VITE_SERVER_URL
     const wsUrl = serverUrl.replace("http", "ws")
-    console.log("wsUrl", wsUrl)
     return {
         plugins: [
             vue(),
@@ -23,7 +21,7 @@ export default defineConfig(({mode}) => {
         server: {
             //局域网 这里访问localhost:81 访问的是前端地址
             host: "0.0.0.0",
-            port: 8081,
+            port: 81, //这里是前端监听的端口
             proxy: {
                 //从/api开始代理
                 "/api": {

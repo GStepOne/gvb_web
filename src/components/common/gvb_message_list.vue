@@ -38,7 +38,7 @@ function checkItem(record: messageType) {
 
   .item {
     //width: auto;
-    height: 40px;
+    //height: 40px;
     padding: 10px 10px;
     display: flex;
     justify-content: space-between;

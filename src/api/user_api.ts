@@ -20,7 +20,7 @@ export function loginQQPath(): Promise<baseResponse<string>> {
 }
 
 export function qqLogin(code: string): Promise<baseResponse<string>> {
-    return useAxios.post("/api/login", null, {params: {code: code}})
+    return useAxios.get("/login",{params: {code: code}})
 }
 
 

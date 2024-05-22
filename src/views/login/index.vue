@@ -29,14 +29,15 @@
 <script setup lang="ts">
 import "@/assets/font.css"
 import Gvb_login_form from "@/components/common/gvb_login_form.vue";
-import router from "@/router"
-import {useRoute} from "vue-router"
+
+import {useRoute, useRouter} from "vue-router"
 import {Message} from "@arco-design/web-vue";
 import {qqLogin} from "@/api/user_api";
 import {useStore} from "@/stores";
 
 const store = useStore()
 const route = useRoute()
+const router = useRouter()//这里才是真正的路由跳转的方法
 
 interface routerQuery {
   flag?: string
@@ -52,27 +53,24 @@ const back = (window.history.state as historyState).back
 //qq登录
 async function init(query: routerQuery) {
   if (query.code === undefined || query.flag !== 'qq') {
-    Message.warning("非法的登录方式")
+    Message.warning("建议您用qq登录")
     return
   }
-
   let res = await qqLogin(query.code)
   if (res.code) {
     Message.error(res.msg)
     return
+  } else {
+    Message.success(res.msg)
+    store.setToken(res.data)
+    // 重定向到上次登录的页面
+    window.history.state.back
+    let redirectUrl = localStorage.getItem("redirectPath")
+    if (redirectUrl === null) {
+      redirectUrl = "/nana"
+    }
+    router.push(redirectUrl)
   }
-
-  Message.success(res.msg)
-  store.setToken(res.data)
-
-  //重定向到上次登录的页面
-  // window.history.state.back
-  // let redirectUrl = localStorage.getItem("redirectPath")
-  // if (redirectUrl === null) {
-  //   redirectUrl = "/nana"
-  // }
-  router.push("/nana")
-
 }
 
 //立马调这个方法
@@ -80,10 +78,9 @@ init(route.query)
 
 function ok() {
   let back = window.history.state.back
-  console.log("这个是ok的值",back)
-  if (back === null) {
-    router.push({name: "index"})
-    return
+  console.log("这个是ok的值", back)
+  if (back === null || back === "/") {
+    back = "/nana"
   }
   router.push(back)
 }

@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import {createRouter, createWebHistory, useRouter} from 'vue-router'
 import type {RouteMeta} from "vue-router";
 import {useStore} from "@/stores";
 import {Message} from "@arco-design/web-vue"
@@ -296,18 +296,6 @@ import NProgress from "nprogress";
 router.beforeEach((to, from, next) => {
     const store = useStore()
     const meta: RouteMeta = to.meta
-    console.log("当前登录", store.isLogin)
-
-    if (!store.isLogin) {
-        if (to.path === '/login') {
-            next();//这里不能写false
-            return;
-        }else {
-            next({path: '/login'}); // 重定向到登录页面
-            return;
-        }
-    }
-
     //如果是普通用户
     if (store.isCommon && (meta.isAdmin || meta.isTourist)) {
         Message.warning("普通用户权限不足")
