@@ -1,1 +1,0 @@
-import{d as o,o as s,c as _,t as a}from"./index-D8gmBzh4.js";import{_ as c}from"./_plugin-vue_export-helper-DlAUqK2U.js";const n={class:"gvb_title"},r=o({__name:"gvb_title",props:{title:{type:String}},setup(t){const e=t;return(i,p)=>(s(),_("div",n,a(e.title),1))}}),d=c(r,[["__scopeId","data-v-2954a1e7"]]);export{d as G};
